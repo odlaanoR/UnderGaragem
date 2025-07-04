@@ -19,9 +19,9 @@ vidaAtual = 92
 
 fonte = pygame.font.SysFont('arial', 30, True, False)
 pygame.display.set_caption('Poggers')
-icon = pygame.image.load('images.png')
+icon = pygame.image.load('assets/images.png')
 pygame.display.set_icon(icon)
-musicaFundo = pygame.mixer.music.load('megalovania.mp3')
+musicaFundo = pygame.mixer.music.load('assets/megalovania.mp3')
 pygame.mixer.music.set_volume(0.6)
 pygame.mixer.music.play(-1)
 
@@ -76,7 +76,7 @@ def reiniciar_jogo():
     x = 65
     y = 445
     gameover = False
-    musicaFundo = pygame.mixer.music.load('megalovania.mp3')
+    musicaFundo = pygame.mixer.music.load('assets/megalovania.mp3')
     pygame.mixer.music.set_volume(0.6)
     pygame.mixer.music.play(-1)
     janela.mudarTela('ações')
@@ -169,14 +169,14 @@ while True:
         while janela.telaAtual == 'gameover':
             if not tocouGameOver:
                 pygame.mixer.music.fadeout(280)
-                gameoverMusica = pygame.mixer.music.load('gameovertheme.mp3')
+                gameoverMusica = pygame.mixer.music.load('assets/gameovertheme.mp3')
                 pygame.mixer.music.set_volume(0.6)
                 pygame.mixer.music.play(-1)
                 tocouGameOver = True
                 janela.atualizaTela()
             
             janela.corFundo()
-            gameoverImg = pygame.image.load('gameover.png')
+            gameoverImg = pygame.image.load('assets/gameover.png')
             janela.tela.blit(gameoverImg, (130,15))
             janela.escreveTexto('Pressione R para reiniciar', fonte, (255,255,255), (50, 400))
             janela.atualizaTela()
