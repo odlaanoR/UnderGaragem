@@ -8,11 +8,11 @@ altura = 480
 velocidade = 7
 x = 65
 y = 450
-cor_acoes = ((150,75,0))
-cor_luta = ((150,75,0))
-cor_agir = ((150,75,0))
-cor_item = ((150,75,0))
-cor_mercy = ((150,75,0))
+corAcoes = ((150,75,0))
+corLuta = corAcoes
+corAgir = corAcoes
+corItem = corAcoes
+corMercy = corAcoes
 fps = pygame.time.Clock()
 vida = 92
 vidaAtual = 92
@@ -25,11 +25,26 @@ musicaFundo = pygame.mixer.music.load('megalovania.mp3')
 pygame.mixer.music.set_volume(0.6)
 pygame.mixer.music.play(-1)
 
-janela = pygame.display.set_mode((largura, altura))
-gameover = False
-gameoverjanela = pygame.display.set_mode((largura, altura))
-confirmaLuta = True
-selecionaLuta = pygame.display.set_mode((largura,altura))
+
+class Janelas():
+    def __init__(self,largura,altura):
+        self.largura = largura
+        self.altura = altura
+        self.tela = pygame.display.set_mode((largura,altura))
+        self.telaAtual = 'ações'
+        
+    def mudarTela(self,novaTela):
+        self.telaAtual = novaTela
+    
+    def atualizaTela(self):
+        pygame.display.flip()
+    
+    def escreveTexto(self, texto, fonte, cor, posicao):
+        txt = fonte.render(texto,True,cor)
+        self.tela.blit(txt,posicao)
+    
+    def corFundo(self,cor=(0,0,0)):
+        self.tela.fill(cor)
 
 class Alma(pygame.sprite.Sprite):
 
@@ -50,6 +65,7 @@ class Alma(pygame.sprite.Sprite):
         self.image = self.sprites[self.estado]
         self.image = pygame.transform.scale(self.image, (16, 16))
         
+janela = Janelas(largura,altura)
 alma = Alma()
 artes = pygame.sprite.Group()
 artes.add(alma)
@@ -63,7 +79,7 @@ def reiniciar_jogo():
     musicaFundo = pygame.mixer.music.load('megalovania.mp3')
     pygame.mixer.music.set_volume(0.6)
     pygame.mixer.music.play(-1)
-
+    janela.mudarTela('ações')
 while True:
     fps.tick((60))
     pygame.display.update()
@@ -75,21 +91,6 @@ while True:
                 x -= 140
             if evento.key == K_z and circulo.colliderect(lutar):
                 print('me clicaram')
-                confirmaLuta = True
-                selecionaLuta = janela  
-                while confirmaLuta:
-                    for e in pygame.event.get():
-                        if e.type == QUIT:
-                            pygame.quit()
-                            exit()
-                        if e.type == KEYDOWN:
-                            if e.key == K_x:
-                                confirmaLuta = False                            
-                    textoLuta = 'Você quer me matar num é?'
-                    lutatxtForm = fonte.render(textoLuta, True, (255, 255, 255))
-                    janela.blit(lutatxtForm, (50, 220))
-                    pygame.display.update()
- 
             if evento.key == K_z and circulo.colliderect(agir):
                 print('me clicaram2')
             if evento.key == K_z and circulo.colliderect(item):
@@ -111,19 +112,22 @@ while True:
             pygame.quit()
             exit()
             
-    janela.fill((0,0,0))
+    janela.corFundo()
     textoVida = f'HP: {vidaAtual}/{vida}'
     
     texto_formatado = fonte.render(textoVida,True, (255, 255, 255)) 
-    caixa = pygame.draw.rect(janela, (255,255,255),(10, 190, 620, 180), width=7)
-    circulo = pygame.draw.circle(janela, (0,255,0), (x+0.2, y+0.8), 7.6)
-    lutar = pygame.draw.rect(janela, cor_luta, (50, 430, 100, 40), width=2)
-    agir = pygame.draw.rect(janela,cor_agir, (190, 430, 100, 40), width=2)
-    item = pygame.draw.rect(janela,cor_item, (330, 430, 100, 40), width=2)
-    mercy = pygame.draw.rect(janela,cor_mercy, (470, 430, 100, 40), width=2)
-    janela.blit(texto_formatado,(260, 385))
-    teclas = pygame.key.get_pressed()
+    caixa = pygame.draw.rect(janela.tela, (255,255,255),(10, 190, 620, 180), width=7)
+    circulo = pygame.draw.circle(janela.tela, (0,255,0), (x+0.2, y+0.8), 7.6)
+    lutar = pygame.draw.rect(janela.tela, corLuta, (50, 430, 100, 40), width=2)
+    agir = pygame.draw.rect(janela.tela,corAgir, (190, 430, 100, 40), width=2)
+    item = pygame.draw.rect(janela.tela,corItem, (330, 430, 100, 40), width=2)
+    mercy = pygame.draw.rect(janela.tela,corMercy, (470, 430, 100, 40), width=2)
+    janela.tela.blit(texto_formatado,(260, 385))
     
+    #teclas = pygame.key.get_pressed() deixei aqui pra testar a tela de gameover.
+    #if teclas[pygame.K_w]:
+        #y -= 7
+
     if alma.estado == 1:
         y += 0
         pygame.display.set_caption("Você está azul agora!")
@@ -135,51 +139,52 @@ while True:
         pygame.display.set_caption("Você se enche de DETERMINAÇÃO")
         velocidade = 0
 
-    artes.draw(janela)
+    artes.draw(janela.tela)
     artes.update()
 
     if circulo.colliderect(caixa):
         vidaAtual -= 1
     
     if circulo.colliderect(lutar):
-        cor_luta = (255,255,0)
+        corLuta = (255,255,0)
     else:
-        cor_luta = cor_acoes
+        corLuta = corAcoes
     
     if circulo.colliderect(agir):
-        cor_agir = (255,255,0)
+        corAgir = (255,255,0)
     else:
-        cor_agir = cor_acoes
+        corAgir = corAcoes
     
     if circulo.colliderect(item):
-        cor_item = (255,255,0)
+        corItem = (255,255,0)
     else:
-        cor_item = cor_acoes
+        corItem = corAcoes
     
     if circulo.colliderect(mercy):
-        cor_mercy = (255,255,0)
+        corMercy = (255,255,0)
     else:
-        cor_mercy = cor_acoes
+        corMercy = corAcoes
     
     if vidaAtual <= 0:
-        gameover = True
+        janela.mudarTela('gameover')
         tocouGameOver = False
-        while gameover:
+        while janela.telaAtual == 'gameover':
             if not tocouGameOver:
                 pygame.mixer.music.fadeout(280)
                 gameoverMusica = pygame.mixer.music.load('gameovertheme.mp3')
                 pygame.mixer.music.set_volume(0.6)
                 pygame.mixer.music.play(-1)
                 tocouGameOver = True
-                
-            pygame.display.update()
-            gameoverjanela.fill((0,0,0))
+                janela.atualizaTela()
+            
+            janela.corFundo()
             gameoverImg = pygame.image.load('gameover.png')
-            gameoverjanela.blit(gameoverImg, (130,15))
+            janela.tela.blit(gameoverImg, (130,15))
             textoGameOver = 'Pressione R para reiniciar'
             ggTextoformatado = fonte.render(textoGameOver, True,(255,255,255))
-            gameoverjanela.blit(ggTextoformatado, (50, 400))
-            
+            janela.tela.blit(ggTextoformatado, (50, 400))
+            janela.atualizaTela()
+                   
             for evento in pygame.event.get():
                 if evento.type == QUIT:
                     pygame.quit()
@@ -188,5 +193,5 @@ while True:
                     if evento.key == K_r:
                         reiniciar_jogo()
                         
-    pygame.display.flip()
+    janela.atualizaTela()
     
