@@ -80,6 +80,7 @@ def reiniciar_jogo():
     pygame.mixer.music.set_volume(0.6)
     pygame.mixer.music.play(-1)
     janela.mudarTela('ações')
+    
 while True:
     fps.tick((60))
     pygame.display.update()
@@ -113,16 +114,13 @@ while True:
             exit()
             
     janela.corFundo()
-    textoVida = f'HP: {vidaAtual}/{vida}'
-    
-    texto_formatado = fonte.render(textoVida,True, (255, 255, 255)) 
     caixa = pygame.draw.rect(janela.tela, (255,255,255),(10, 190, 620, 180), width=7)
     circulo = pygame.draw.circle(janela.tela, (0,255,0), (x+0.2, y+0.8), 7.6)
     lutar = pygame.draw.rect(janela.tela, corLuta, (50, 430, 100, 40), width=2)
     agir = pygame.draw.rect(janela.tela,corAgir, (190, 430, 100, 40), width=2)
     item = pygame.draw.rect(janela.tela,corItem, (330, 430, 100, 40), width=2)
     mercy = pygame.draw.rect(janela.tela,corMercy, (470, 430, 100, 40), width=2)
-    janela.tela.blit(texto_formatado,(260, 385))
+    janela.escreveTexto(f'HP:{vidaAtual}/{vida}', fonte, (255,255,255),(260,385))
     
     #teclas = pygame.key.get_pressed() deixei aqui pra testar a tela de gameover.
     #if teclas[pygame.K_w]:
@@ -180,9 +178,7 @@ while True:
             janela.corFundo()
             gameoverImg = pygame.image.load('gameover.png')
             janela.tela.blit(gameoverImg, (130,15))
-            textoGameOver = 'Pressione R para reiniciar'
-            ggTextoformatado = fonte.render(textoGameOver, True,(255,255,255))
-            janela.tela.blit(ggTextoformatado, (50, 400))
+            janela.escreveTexto('Pressione R para reiniciar', fonte, (255,255,255), (50, 400))
             janela.atualizaTela()
                    
             for evento in pygame.event.get():
