@@ -51,19 +51,9 @@ class Janelas():
     def escreveTexto(self, texto, fonte, cor, posicao):
         txt = fonte.render(texto,True,cor)
         self.tela.blit(txt,posicao)
-        
-    def textoDelay(self, texto,fonte, cor, posicao, delay):
-        txtAtual =''
-        for letra in texto:
-            txtAtual += letra
-            txtRenderizado = fonte.render(txtAtual,True,cor)
-            self.tela.blit(txtRenderizado,posicao)
-            time.sleep(delay)
     
     def corFundo(self,cor=(0,0,0)):
         self.tela.fill(cor)
-
-
 
 class Alma(pygame.sprite.Sprite):
 
