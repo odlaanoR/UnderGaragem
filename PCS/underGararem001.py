@@ -14,18 +14,6 @@ fps = pygame.time.Clock()
 vida = 92
 vidaAtual = 92
 
-corAcoes = ((150,75,0))
-corLuta = corAcoes
-corAgir = corAcoes
-corItem = corAcoes
-corMercy = corAcoes
-
-mostrarMsgLutar = False
-mostrarMsgAgir = False
-mostrarMsgItem = False
-mostrarMsgMercy = False
-
-
 fonte = pygame.font.SysFont('arial', 30, True, False)
 fonteBatalha = pygame.font.SysFont('comicsans', 20, True, False)
 pygame.display.set_caption('Poggers')
@@ -51,9 +39,40 @@ class Janelas():
     def escreveTexto(self, texto, fonte, cor, posicao):
         txt = fonte.render(texto,True,cor)
         self.tela.blit(txt,posicao)
-    
+        
     def corFundo(self,cor=(0,0,0)):
         self.tela.fill(cor)
+
+class Acoes():
+    corPadrao = (150,75,0)
+    novaCor = (255,255,0)
+    
+    def __init__(self, pos_x, msg):
+        self.botao = pygame.Rect(pos_x, 430, 100, 40)
+        self.cor = self.corPadrao
+        self.mostraMsg = False
+        self.mensagem = msg
+        
+    def desenhaAtos(self):
+        pygame.draw.rect(janela.tela, self.cor, self.botao, width=2)
+
+    def checaAlma(self, player):
+        if player.colliderect(self.botao):
+            self.cor = self.novaCor
+        else:
+            self.cor = self.corPadrao
+            
+    def clique(self,player, tecla):
+        if tecla == K_z and player.colliderect(self.botao):
+            self.mostraMsg = True
+            
+    def cancelaAto(self):
+        self.mostraMsg = False
+            
+    def atoMensagem(self, fonte):
+        if self.mostraMsg:
+            janela.tela.blit(fonte.render(self.mensagem, True, (255,255,255)), (43,205))
+    
 
 class Alma(pygame.sprite.Sprite):
 
@@ -75,6 +94,13 @@ class Alma(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (16, 16))
         
 janela = Janelas(largura,altura)
+botoes = [
+    Acoes(50, "Wilson Tremba"),
+    Acoes(190, "Checar"),
+    Acoes(330, "Cuscuz Paulista"),
+    Acoes(470, "Piedade"),
+    ]
+
 alma = Alma()
 artes = pygame.sprite.Group()
 artes.add(alma)
@@ -90,34 +116,32 @@ def reiniciar_jogo():
     pygame.mixer.music.play(-1)
     janela.mudarTela('ações')
     
+
 while True:
     fps.tick((60))
     pygame.display.update()
     for evento in pygame.event.get():
         if evento.type == KEYDOWN:
-            if evento.key == K_RIGHT and not alma.rect.colliderect(mercy):
+            
+            if evento.key == K_RIGHT and not alma.rect.colliderect(botoes[3].botao) and not any(botao.mostraMsg for botao in botoes):
                 x += 140
-            if evento.key == K_LEFT and not alma.rect.colliderect(lutar):
+            if evento.key == K_LEFT and not alma.rect.colliderect(botoes[0].botao) and not any(botao.mostraMsg for botao in botoes):
                 x -= 140
-            if evento.key == K_z and alma.rect.colliderect(lutar):
-                mostrarMsgLutar = True
-            if evento.key == K_z and alma.rect.colliderect(agir):
-                mostrarMsgAgir = True
-            if evento.key == K_z and alma.rect.colliderect(item):
-                mostrarMsgItem = True
-            if evento.key == K_z and alma.rect.colliderect(mercy):
-                mostrarMsgMercy = True
-  
+                            
+            if evento.key == K_z:
+                for botao in botoes:
+                    botao.clique(alma.rect, evento.key)
+                x = 30
+                y = 220
+       
             if evento.key == K_x:
-                mostrarMsgLutar = False
-                mostrarMsgAgir = False
-                mostrarMsgItem = False
-                mostrarMsgMercy = False
+                for botao in botoes:
+                    botao.cancelaAto()
                 x = 65
                 y = 450
                 janela.mudarTela('ações')
                 janela.atualizaTela()
-                
+            
             if evento.key == K_F11:
                 #print("Pondo em tela cheia...")
                 pygame.display.toggle_fullscreen()
@@ -132,15 +156,19 @@ while True:
             
     janela.corFundo()
     caixa = pygame.draw.rect(janela.tela, (255,255,255),(10, 190, 620, 180), width=7)
-    lutar = pygame.draw.rect(janela.tela, corLuta, (50, 430, 100, 40), width=2)
-    agir = pygame.draw.rect(janela.tela,corAgir, (190, 430, 100, 40), width=2)
-    item = pygame.draw.rect(janela.tela,corItem, (330, 430, 100, 40), width=2)
-    mercy = pygame.draw.rect(janela.tela,corMercy, (470, 430, 100, 40), width=2)
     janela.escreveTexto(f'HP:{vidaAtual}/{vida}', fonte, (255,255,255),(260,385))
     
+    for botao in botoes:
+        botao.checaAlma(alma.rect)
+        botao.desenhaAtos()
+        botao.atoMensagem(fonteBatalha)
+
+    #Esses aqui botei nos comentários pq fico testando a tela de gameover.
     #teclas = pygame.key.get_pressed() 
     #if teclas[pygame.K_w]:
-        #y -= 7
+        #y -= 7  
+    #if alma.rect.colliderect(caixa):
+        #vidaAtual -= 10
 
     if alma.estado == 1:
         y += 0
@@ -155,48 +183,6 @@ while True:
 
     artes.draw(janela.tela)
     artes.update()
-
-    if alma.rect.colliderect(caixa):
-        vidaAtual -= 0
-    
-    if alma.rect.colliderect(lutar):
-        corLuta = (255,255,0)
-    else:
-        corLuta = corAcoes
-    
-    if alma.rect.colliderect(agir):
-        corAgir = (255,255,0)
-    else:
-        corAgir = corAcoes
-    
-    if alma.rect.colliderect(item):
-        corItem = (255,255,0)
-    else:
-        corItem = corAcoes
-    
-    if alma.rect.colliderect(mercy):
-        corMercy = (255,255,0)
-    else:
-        corMercy = corAcoes
-    
-    if mostrarMsgLutar:
-        janela.escreveTexto('Wilson Tremba',fonteBatalha,(255,255,255),(43,205))
-        x = 30
-        y = 220
-        
-    if mostrarMsgAgir:
-        janela.escreveTexto('Checar',fonteBatalha,(255,255,255),(43,205))
-        x = 30
-        y = 220
-    if mostrarMsgItem:
-        janela.escreveTexto('Cuscuz Paulista',fonteBatalha,(255,255,255),(43,205))
-        x = 30
-        y = 220
-    if mostrarMsgMercy:
-        janela.escreveTexto('Piedade',fonteBatalha,(255,255,255),(43,205))
-        x = 30
-        y = 220
-         
     
     if vidaAtual <= 0:
         janela.mudarTela('gameover')
