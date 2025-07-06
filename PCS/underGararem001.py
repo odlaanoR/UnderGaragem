@@ -123,6 +123,7 @@ while True:
     for evento in pygame.event.get():
         if evento.type == KEYDOWN:
             
+            #essas condições tive que me render ao GPT....
             if evento.key == K_RIGHT and not alma.rect.colliderect(botoes[3].botao) and not any(botao.mostraMsg for botao in botoes):
                 x += 140
             if evento.key == K_LEFT and not alma.rect.colliderect(botoes[0].botao) and not any(botao.mostraMsg for botao in botoes):
