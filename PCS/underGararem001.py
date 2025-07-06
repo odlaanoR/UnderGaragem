@@ -73,7 +73,6 @@ class Acoes():
         if self.mostraMsg:
             janela.tela.blit(fonte.render(self.mensagem, True, (255,255,255)), (43,205))
     
-
 class Alma(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -116,14 +115,12 @@ def reiniciar_jogo():
     pygame.mixer.music.play(-1)
     janela.mudarTela('ações')
     
-
 while True:
     fps.tick((60))
     pygame.display.update()
     for evento in pygame.event.get():
         if evento.type == KEYDOWN:
-            
-            #essas condições tive que me render ao GPT....
+
             if evento.key == K_RIGHT and not alma.rect.colliderect(botoes[3].botao) and not any(botao.mostraMsg for botao in botoes):
                 x += 140
             if evento.key == K_LEFT and not alma.rect.colliderect(botoes[0].botao) and not any(botao.mostraMsg for botao in botoes):
