@@ -72,8 +72,32 @@ class Acoes():
     def atoMensagem(self, fonte):
         if self.mostraMsg:
             janela.tela.blit(fonte.render(self.mensagem, True, (255,255,255)), (43,205))
-    
+            
+class Ataque():
+    def __init__(self, cor , ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, vel):
+        self.retangulo = pygame.Rect(ataque_x, ataque_y, ataque_w, ataque_h)
+        self.mov_x = mov_x
+        self.mov_y = mov_y
+        self.vel = vel
+        self.cor = cor
+        self.mostrar = True
 
+    def atualizar(self, alma_rect):
+        if self.mostrar == True:
+            self.retangulo.x += self.mov_x
+            self.retangulo.y += self.mov_y
+            if self.retangulo.x >= 640:
+                self.retangulo.x = 0
+            if self.retangulo.colliderect(alma_rect):
+                print("colidiu!")
+                self.mostrar = False
+                return True
+            return False
+            
+    def draw(self):
+        if self.mostrar == True:
+            self.sla1 = pygame.draw.rect(janela.tela, self.cor, self.retangulo)
+ 
 class Alma(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -102,11 +126,12 @@ botoes = [
     ]
 
 alma = Alma()
+ataque = Ataque((255,255,255), 0, 110, 20, 20, 3, 0, 5)
 artes = pygame.sprite.Group()
 artes.add(alma)
 
 def reiniciar_jogo():
-    global vidaAtual, gameover, x, y, musicaFundo
+    global vidaAtual, gameover, x, y, musicaFundo, bateu
     vidaAtual = 92
     x = 65
     y = 445
@@ -116,7 +141,7 @@ def reiniciar_jogo():
     pygame.mixer.music.play(-1)
     janela.mudarTela('ações')
     
-
+    
 while True:
     fps.tick((60))
     pygame.display.update()
@@ -157,16 +182,32 @@ while True:
     janela.corFundo()
     caixa = pygame.draw.rect(janela.tela, (255,255,255),(10, 190, 620, 180), width=7)
     janela.escreveTexto(f'HP:{vidaAtual}/{vida}', fonte, (255,255,255),(260,385))
-    
+        
     for botao in botoes:
         botao.checaAlma(alma.rect)
         botao.desenhaAtos()
         botao.atoMensagem(fonteBatalha)
-
-    #Esses aqui botei nos comentários pq fico testando a tela de gameover.
-    #teclas = pygame.key.get_pressed() 
-    #if teclas[pygame.K_w]:
-        #y -= 7  
+        
+    if ataque.mostrar:
+        ataque.draw()      
+        if ataque.atualizar(alma.rect) and ataque.mostrar == False:
+            vidaAtual -= 1
+        
+   #desconsidere isso no jogo normal, é apenas pra testar o ataque lá 
+    teclas = pygame.key.get_pressed() 
+    if teclas[pygame.K_w]:
+        y -= 7
+        
+    if teclas[pygame.K_s]:
+        y += 7
+        
+    if teclas[pygame.K_d]:
+        x += 7
+        
+    if teclas[pygame.K_a]:
+        x -= 7
+        
+    #Esse aqui botei nos comentários pq fico testando a tela de gameover.
     #if alma.rect.colliderect(caixa):
         #vidaAtual -= 10
 
