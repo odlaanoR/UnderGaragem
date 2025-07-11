@@ -300,7 +300,7 @@ while True:
                 janela.atualizaTela()    
             if ataque.atualizar(alma.rect) and ataque.mostrar == False:
                 vidaAtual -= 1
-                somColisao = pygame.mixer.Sound('assets/sounds/snd_hurt1.wav')
+                somColisao = pygame.mixer.Sound('assets/sounds/dano.mp3')
                 somColisao.set_volume(0.4)
                 somColisao.play()
                 janela.mudarTela('ações')
