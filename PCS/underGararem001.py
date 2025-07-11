@@ -56,7 +56,7 @@ class Acoes(): #to começando a achar que essa classe ta maior doq deveria mas f
         self.mostraMsg = False
         self.mensagem = msg
         self.passou = False
-        self.gambiarraMsg = pygame.Rect((0,0,0,0))
+        self.gambiarraMsg = pygame.Rect((0,0,0,0)) #ah, esqueci de explicar. Isso aqui foi uma variável que eu criei pq queria que o texto lá das ações fossem clicáveis (talvez tenha um jeito melhor de fazer isso)
         self.mira = pygame.Rect((0,0,0,0))
         self.x_mira = 40
         self.mirando = False
