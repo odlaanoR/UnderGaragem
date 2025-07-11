@@ -256,7 +256,7 @@ while True:
     else:
         janela.desenhaCaixa((10,180,620,180))
         
-    almaDesaparece = any(botao.mirando for botao in botoes) 
+    almaDesaparece = any(botao.mirando for botao in botoes)
 
     if almaDesaparece == False:
         janela.tela.blit(alma.image, alma.rect)
@@ -276,8 +276,9 @@ while True:
         #y -= 7  
     #if alma.rect.colliderect(caixa):
         #vidaAtual -= 10
-
-    if janela.telaAtual == 'lutaAcontecendo':
+        #Sim, o código está falho ainda. Só tem 1 ataque ai quando acaba fica todo fodido como você pode ver. Eventualmente conserto
+        
+    if botoes[0].comecaBatalha and janela.telaAtual == 'lutaAcontecendo':
         teclas = pygame.key.get_pressed()
         if teclas[pygame.K_x]:
             velocidade = 2.2
@@ -291,13 +292,14 @@ while True:
             y -= 1 * velocidade
         if teclas[pygame.K_DOWN]:
             y += 1 * velocidade
-            
-        #Sim, o código está falho ainda. Só tem 1 ataque ai quando acaba fica todo fodido como você pode ver. Eventualmente conserto
         if ataque.mostrar:
             ataque.draw()
             if ataque.contador == 3: #botei isso aqui pra caso o ataque seja resetado pro começo da tela 3 vezes ele parar o ataque e voltar pra tela inicial
                 janela.mudarTela('ações')
-                janela.atualizaTela()    
+                janela.atualizaTela()
+                botoes[0].naBatalha = False  
+                botoes[0].comecaBatalha = False  
+                    
             if ataque.atualizar(alma.rect) and ataque.mostrar == False:
                 vidaAtual -= 1
                 somColisao = pygame.mixer.Sound('assets/sounds/dano.mp3')
@@ -307,6 +309,10 @@ while True:
                 janela.atualizaTela()
                 x = 65
                 y = 450
+                botoes[0].naBatalha = False  
+                botoes[0].comecaBatalha = False
+        if not ataque.mostrar:
+            janela.escreveTexto("Tomou soft lock né KKKKKKKKKKKK", fonte, (255,255,255),(90, 250))
 
     if vidaAtual <= 0:
         janela.mudarTela('gameover')
