@@ -3,6 +3,7 @@ from pygame.locals import *
 from sys import exit
 import time
 
+
 pygame.init()
 largura = 640
 altura = 480
@@ -132,13 +133,15 @@ class Acoes(): #to começando a achar que essa classe ta maior doq deveria mas f
                 self.comecaBatalha = True
             
     def batalhaAcontece(self):
-        global x, y, tempoLuta
+        global x, y, tempoLuta, contadorTurno
+        contadorTurno = 0
         if self.comecaBatalha and self.naBatalha == False:
             tempoLuta = pygame.time.get_ticks()
             janela.mudarTela('lutaAcontecendo')
             x = 320
             y = 260
             self.naBatalha = True
+            contadorTurno += 1
         
 class Ataque():
     def __init__(self, cor , ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, vel):
@@ -297,21 +300,19 @@ while True:
             if ataque.contador == 3: #botei isso aqui pra caso o ataque seja resetado pro começo da tela 3 vezes ele parar o ataque e voltar pra tela inicial
                 janela.mudarTela('ações')
                 janela.atualizaTela()
+                x = 65
+                y = 450
                 botoes[0].naBatalha = False  
-                botoes[0].comecaBatalha = False  
+                botoes[0].comecaBatalha = False
+                ataque.mostrar = False  
                     
             if ataque.atualizar(alma.rect) and ataque.mostrar == False:
                 vidaAtual -= 1
                 somColisao = pygame.mixer.Sound('assets/sounds/dano.mp3')
                 somColisao.set_volume(0.4)
                 somColisao.play()
-                janela.mudarTela('ações')
-                janela.atualizaTela()
-                x = 65
-                y = 450
-                botoes[0].naBatalha = False  
-                botoes[0].comecaBatalha = False
-        if not ataque.mostrar:
+                
+        if not ataque.mostrar or contadorTurno >= 2:
             janela.escreveTexto("Tomou soft lock né KKKKKKKKKKKK", fonte, (255,255,255),(90, 250))
 
     if vidaAtual <= 0:
