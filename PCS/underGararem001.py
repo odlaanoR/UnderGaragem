@@ -381,14 +381,6 @@ while True:
         botao.mirar(confirmaAtaque)
         botao.batalhaAcontece()
     confirmaAtaque = None
- 
-    #Esses aqui botei nos comentários pq fico testando a tela de gameover.
-    #teclas = pygame.key.get_pressed() 
-    #if teclas[pygame.K_w]:
-        #y -= 7  
-    #if alma.rect.colliderect(caixa):
-        #vidaAtual -= 10
-        #Sim, o código está falho ainda. Só tem 1 ataque ai quando acaba fica todo fodido como você pode ver. Eventualmente conserto
         
     if botoes[0].comecaBatalha and janela.telaAtual == 'lutaAcontecendo':
         teclas = pygame.key.get_pressed()
@@ -467,4 +459,3 @@ while True:
                         reiniciar_jogo()
                         
     janela.atualizaTela()
-    
