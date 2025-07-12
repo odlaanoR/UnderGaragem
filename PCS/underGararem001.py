@@ -157,7 +157,7 @@ class Item():
         
     def usar(self):
         global vidaAtual
-        if self.nome == 'Bolo de Sushi': #isso ta passando da vida máxima, deve ter algum comando pra limitar isso (ou com if e else mas por enquanto vou deixar assim)
+        if self.nome == 'Bolo de Sushi': 
             vidaAtual = min(vidaAtual + 30, vida)
         elif self.nome == 'Cuscuz Paulista':
             vidaAtual -= 1
