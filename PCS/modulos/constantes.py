@@ -20,3 +20,5 @@ pygame.display.set_icon(icon)
 musicaFundo = pygame.mixer.music.load('assets/Project147.mp3')
 pygame.mixer.music.set_volume(0.45)
 pygame.mixer.music.play(-1)
+
+print('preparando constantes...')
