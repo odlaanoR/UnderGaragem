@@ -58,7 +58,7 @@ while True:
                 cos.x = 65
                 cos.y = 450
         if evento.type == KEYDOWN and janela.telaAtual == 'lutaAcontecendo':
-            if evento.key == K_x and ataque.mostrar == False: #isso só vai ficar por enquanto (lembrar de tirar depois)
+            if evento.key == K_e and ataque.mostrar == False: #isso só vai ficar por enquanto (lembrar de tirar depois)
                 janela.mudarTela('ações')
                 cos.x = 65
                 cos.y = 450
@@ -120,7 +120,7 @@ while True:
                 
         if ataque.mostrar == False or contadorTurno >= 2: #isso ta piscando depois do 1° turno (preocupante)
             janela.escreveTexto("Tomou soft lock né KKKKKKKKKKKK", cos.fonte, (255,255,255),(90, 250))
-            janela.escreveTexto("Aperta X pra sair vai", cos.fonte, (255,255,255),(90, 280))
+            janela.escreveTexto("Aperta E pra sair vai", cos.fonte, (255,255,255),(90, 280))
             
     if janela.telaAtual == 'inventário':
         func.printaItens()
