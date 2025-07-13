@@ -31,3 +31,5 @@ class Ataque():
 ataque = Ataque((255,255,255), 80, 220, 20, 20, 3, 0, 5)
 ataque2 = Ataque('white', 90, 250, 40, 40, 10, 0, 5)
 ataque3 = Ataque('red', 150, 150, 30, 30, 0, 0, 0)
+
+print('carregando ataques...')
