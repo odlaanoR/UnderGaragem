@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import *
-from modulos.janelas import janela
-from modulos.acoes import *
-from modulos.item import *
 from modulos.alma import alma
+from modulos.janelas import janela
+from modulos.selecoes import *
+from modulos.item import *
 from modulos.ataques import *
 import modulos.funcoes as func
 import modulos.constantes as cos
@@ -15,7 +15,7 @@ while True:
     eventos = pygame.event.get()
     confirmaAtaque = None
     for evento in eventos:
-        if evento.type == KEYDOWN and janela.telaAtual == 'ações':
+        if evento.type == KEYDOWN and janela.telaAtual == 'seleções':
             confirmaAtaque = evento.key
             if evento.key == K_RIGHT and not alma.rect.colliderect(botoes[3].botao) and not any(botao.mostraMsg for botao in botoes):
                 cos.x += 140
@@ -27,19 +27,19 @@ while True:
                 cos.y = 220
                 for botao in botoes:
                     botao.checaClique(evento.key)
-                if botoes[0].confirmaAcao(evento.key):
+                if botoes[0].confirmaSelecao(evento.key):
                     botoes[0].confirmaLuta()
                     botoes[0].batalhaAcontece()
-                if botoes[1].confirmaAcao(evento.key):
+                if botoes[1].confirmaSelecao(evento.key):
                     botoes[1].confirmaAgir()
-                if botoes[2].confirmaAcao(evento.key):
+                if botoes[2].confirmaSelecao(evento.key):
                     botoes[2].confirmaTelaItem()
-                if botoes[3].confirmaAcao(evento.key):
+                if botoes[3].confirmaSelecao(evento.key):
                     botoes[3].confirmaPiedade()
 
             if evento.key == K_x and not any(botao.mirando for botao in botoes):
                 for botao in botoes:
-                    botao.cancelaAcao()
+                    botao.cancelaSelecao()
                 cos.x = 65
                 cos.y = 450
         if evento.type == KEYDOWN and janela.telaAtual == 'inventário': #A movimentação ainda não está limitada (ajeitar depois)
@@ -54,18 +54,23 @@ while True:
             if evento.key == K_z:
                 func.consomeItem(evento.key)
             if evento.key == K_x:
-                janela.mudarTela('ações')
+                janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
         if evento.type == KEYDOWN and janela.telaAtual == 'lutaAcontecendo':
             if evento.key == K_e and ataque.mostrar == False: #isso só vai ficar por enquanto (lembrar de tirar depois)
-                janela.mudarTela('ações')
+                janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
         if evento.type == QUIT:
             pygame.quit()
             exit()
-   
+        if evento.type == KEYDOWN and janela.telaAtual == 'ações':
+            if evento.key == K_x:
+                janela.mudarTela('seleções')
+                cos.x = 65
+                cos.y = 450
+            
     janela.corFundo()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
     if janela.telaAtual == 'lutaAcontecendo':
@@ -81,8 +86,8 @@ while True:
             
     for botao in botoes:
         botao.checaAlma()
-        botao.desenhaAcoes()
-        botao.acoesMensagem(cos.fonteBatalha)
+        botao.desenhaSelecoes()
+        botao.selecaoMensagem(cos.fonteBatalha)
         botao.mirar(confirmaAtaque)
         botao.batalhaAcontece()
     confirmaAtaque = None
@@ -104,7 +109,7 @@ while True:
         if ataque.mostrar:
             ataque.draw()
             if ataque.contador == 3: #botei isso aqui pra caso o ataque seja resetado pro começo da tela 3 vezes ele parar o ataque e voltar pra tela inicial
-                janela.mudarTela('ações')
+                janela.mudarTela('seleções')
                 janela.atualizaTela()
                 cos.x = 65
                 cos.y = 450
@@ -136,7 +141,7 @@ while True:
             if tempoAtual - func.transicaoTempo > 2000:
                 mostraTransicao = False
                 botoes[0].comecaBatalha = True
-                
+
     if cos.vidaAtual <= 0:
         janela.mudarTela('gameover')
         tocouGameOver = False
