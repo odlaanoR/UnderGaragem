@@ -1,13 +1,11 @@
 import pygame
 from pygame.locals import *
 from modulos.janelas import janela
-from modulos.acoes import *
+from modulos.selecoes import *
 from modulos.item import *
 from modulos.alma import alma
 from modulos.ataques import *
 import modulos.constantes as cos
-
-
 
 def reiniciar_jogo():
     global vidaAtual, gameover, x, y, musicaFundo, itens, ataque, ataque2, ataque3
@@ -18,7 +16,7 @@ def reiniciar_jogo():
     musicaFundo = pygame.mixer.music.load('assets/Project147.mp3')
     pygame.mixer.music.set_volume(0.45)
     pygame.mixer.music.play(-1)
-    janela.mudarTela('ações')
+    janela.mudarTela('seleções')
     itens = [
         Item('Bolo de Sushi', 'Você recupera 30 de vida'),
         Item('Cuscuz Paulista','brutal'),
