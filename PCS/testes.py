@@ -14,8 +14,8 @@ fases = [
     atk.Gerarataques(atk.rodada2(), 10)
 ]
 fase_atual = 0
-
-
+cos.vida = 92
+cos.vidaAtual = 70
 while True:
     cos.fps.tick((60))
     pygame.display.update()
@@ -175,15 +175,18 @@ while True:
             func.printaAcoes()
             for acao in act.acoes:
             acao.checaAlma
-    
-    
-    
     '''
         
     if janela.telaAtual == 'transiçãoItens': #No segundo item usado a tela congela por conta do ataque que também só vai até o primeiro (ajeitar depois)
         janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
         janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260))
-        func.itemSelecionado.usar()
+
+        if not func.consumiuItem:
+            print(f"[antes de usar item] vidaAtual = {cos.vidaAtual}")
+            func.itemSelecionado.usar()
+            print(f"[depois de usar item] vidaAtual = {cos.vidaAtual}")
+            func.consumiuItem = True
+          
         if func.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
             if tempoAtual - func.transicaoTempo > 2000:
