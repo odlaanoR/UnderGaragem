@@ -14,8 +14,7 @@ fases = [
     atk.Gerarataques(atk.rodada2(), 10)
 ]
 fase_atual = 0
-cos.vida = 92
-cos.vidaAtual = 70
+
 while True:
     cos.fps.tick((60))
     pygame.display.update()
