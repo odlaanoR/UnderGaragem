@@ -3,9 +3,7 @@ from pygame.locals import *
 import modulos.constantes as cos
 from modulos.janelas import janela
 from modulos.alma import alma
-global contadorTurno
 
-contadorTurno = 0
 pygame.init()
 
 class Selecoes(): #to começando a achar que essa classe ta maior doq deveria mas fazer oq
@@ -28,11 +26,12 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
     def desenhaSelecoes(self):
         pygame.draw.rect(janela.tela, self.cor, self.botao, width=2)
 
-    def checaAlma(self):
+    #Serve para checar se a alma passou por algum botão, se sim, toca um som
+    def checaAlma(self): 
         if alma.rect.colliderect(self.botao):
             self.cor = self.novaCor
             if self.passou:
-                passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.wav')
+                passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
                 passaAcao.set_volume(0.3)
                 passaAcao.play()
                 self.passou = False   
@@ -42,7 +41,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def checaClique(self, tecla):
         if tecla == K_z and alma.rect.colliderect(self.botao):
-            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.wav')
+            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
             clicaAcao.set_volume(0.4)
             clicaAcao.play()
             self.gambiarraMsg = pygame.Rect(30, 215, 10, 10)
@@ -56,7 +55,8 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
     def mirar(self, tecla):
         global tempoAtual
         if self.mirando:
-            self.alvo = pygame.image.load('assets/mira.png')
+            print('mirar inicia')
+            self.alvo = pygame.image.load('assets/sprites/mira.png')
             self.alvo = pygame.transform.scale(self.alvo, (600, 135))
             janela.tela.blit(self.alvo, (20, 205))
             self.x_mira += 5.6
@@ -67,21 +67,24 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
                 self.mirando = False
                 self.x_mira = 40
                 self.comecaBatalha = True
-            
+                self.impedeTravaPos = False
+                print(self.comecaBatalha)
+                print(self.impedeTravaPos)
+        
+    #Método que, quando chamado, muda o jogador para a tela de combate. O comecaBatalha (flag) serve para garantir que a função não seja chamada até que a flag seja verdadeira
     def batalhaAcontece(self):
-        global x, y, tempoLuta, contadorTurno
-        contadorTurno = 0
+        global x, y, tempoLuta
         if self.comecaBatalha and self.impedeTravaPos == False:
             tempoLuta = pygame.time.get_ticks()
             janela.mudarTela('lutaAcontecendo')
             cos.x = 320
             cos.y = 260
             self.impedeTravaPos = True
-            contadorTurno += 1
-            
+            print('batalha acontece')
+                    
     def confirmaSelecao(self, tecla):
         if self.mostraMsg and tecla == K_z and alma.rect.colliderect(self.gambiarraMsg):
-            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.wav')
+            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
             clicaAcao.set_volume(0.4)
             clicaAcao.play()
             self.mostraMsg = False

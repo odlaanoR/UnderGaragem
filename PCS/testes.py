@@ -1,273 +1,220 @@
 import pygame
 from pygame.locals import *
-
-pygame.init()
-#Iniciando e setando as bases do jogo
-tela = pygame.display.set_mode((1280, 720))
-clock = pygame.time.Clock()
-dt = 0
-
-dano_snd = pygame.mixer.Sound('PCS/assets/sounds/dano.mp3')
-txt_snd = pygame.mixer.Sound('PCS/assets/sounds/txt.mp3')
-parry_snd = pygame.mixer.Sound('PCS/assets/sounds/parry.mp3')
-
-player_pos = pygame.Vector2(tela.get_width() / 2, tela.get_height() / 2)
-
-
-icone = pygame.image.load('PCS/assets/sprites/alma.png')
-pygame.display.set_caption("ataque,ataque, isso aqui ta ligado?")
-pygame.display.set_icon(icone)
-
-#Tudo isso aqui é uma tentativa de fazer o sprite da alma funcionar
-class Alma(pygame.sprite.Sprite):
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.sprites = []
-        self.sprites.append(pygame.image.load('PCS/assets/sprites/alma.png'))
-        self.sprites.append(pygame.image.load('PCS/assets/sprites/almaazul.png'))
-        self.sprites.append(pygame.image.load('PCS/assets/sprites/almaverde.png')) 
-        self.game_over = pygame.image.load('PCS/assets/sprites/almaquebrada.png')      
-        self.estado = 0
-        self.image = self.sprites[self.estado]
-        self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect = self.image.get_rect()
-        self.rect.center = player_pos.x, player_pos.y
-
-    def update(self):
-        self.rect.center = player_pos.x, player_pos.y
-        self.image = self.sprites[self.estado]
-        self.image = pygame.transform.scale(self.image, (50, 50))
-
-    def morte(self):
-        self.image = self.game_over
-        self.image = pygame.transform.scale(self.image, (50, 50))
-
-
-
-def mostratexto(texto, finalizada):
-    texto_final = ""
-    global texto_completo
-    global textbox
-    if finalizada == False:
-        for letra in texto:
-                texto_final = texto_final + letra
-                txt_snd.play()
-                #print(texto_final)
-                textbox = fonte.render(texto_final, False, 'white')
-        if texto_final == texto:
-                print("Concluido!")
-                finalizada = True
-        if finalizada == True:
-            texto_completo = True
-
-
-
-class Ataque():
-    def __init__(self, cor , ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, vel):
-        self.retangulo = pygame.Rect(ataque_x, ataque_y, ataque_w, ataque_h)
-        self.y = ataque_y
-        self.x = ataque_x
-        self.mov_x = mov_x
-        self.mov_y = mov_y
-        self.vel = vel
-        self.cor = cor
-        self.mostrar = True
-
-    def atualizar(self, alma_rect, escudo):
-        if self.mostrar == True:
-            self.retangulo.x += self.mov_x
-            self.retangulo.y += self.mov_y
-            if self.retangulo.x >= tela.get_width() or self.retangulo.x < 0:
-                self.retangulo.x = self.x
-            if self.retangulo.y >= tela.get_height() or self.retangulo.y < 0:
-                self.retangulo.y = self.y
-            if self.retangulo.colliderect(alma_rect):
-                print("colidiu!")
-                self.mostrar = False
-                return("dano")
-            elif self.retangulo.colliderect(escudo) and alma.estado == 2:
-                print("Parry!")
-                self.mostrar = False
-                return ("parry")
-            return False
-            
-    def draw(self):
-        if self.mostrar == True:
-            self.sla1 = pygame.draw.rect(tela, self.cor, self.retangulo)
-
-
-
-
-def verde():
-    global escudo
-    if direcao == "cima":
-        escudo = pygame.draw.line(tela, 'green', (((tela.get_width() / 2)-50), ((tela.get_height() / 2)-50)), (((tela.get_width() / 2)+50), ((tela.get_height() / 2)-50)), 4)
-    elif direcao == "baixo":
-        escudo = pygame.draw.line(tela, 'yellow', (((tela.get_width() / 2)-50), ((tela.get_height() / 2)+50)), (((tela.get_width() / 2)+50), ((tela.get_height() / 2)+50)), 4)
-    elif direcao == "esquerda":
-        escudo = pygame.draw.line(tela, 'red', (((tela.get_width() / 2)-50), ((tela.get_height() / 2)+50)), (((tela.get_width() / 2)-50), ((tela.get_height() / 2)-50)), 4)
-    elif direcao == "direita":
-        escudo = pygame.draw.line(tela, 'blue', (((tela.get_width() / 2)+50), ((tela.get_height() / 2)+50)), (((tela.get_width() / 2)+50), ((tela.get_height() / 2)-50)), 4)
-
-
-ataque1 = Ataque ('white', 220, 550, 40, 40, 10, 0, (75*dt))
-ataque2 = Ataque ('white', 500, 500, 40, 40, 10, 0, (75*dt))
-ataque3 = Ataque ('red', 150, 150, 30, 30, 0, 0, 0)
-ataque4 = Ataque ('green', 0, (tela.get_height()/2), 40, 40, 3, 0, 3)
-ataque5 = Ataque ('green', 1200, (tela.get_height()/2), 40, 40, -5, 0, 3)
-
-
-escudo = pygame.draw.line(tela, 'blue', (0,0), (0,0), 1)
-
-fonte = pygame.font.SysFont('arial', 40, False)
-
-alma = Alma()
-artes = pygame.sprite.Group()
-artes.add(alma)
-
-
-#variaveis diversas vão aqui
-ataques = []#Adicionar isso em um módulo a parte
-dialogos = ["*Aqui acabou.", "*Ola", "*Esse é o fim", "*C O N T I N U E  A T A C A N D O"]#Adicionar isso em um módulo a parte
-dialogo_atual = 0
-x = 0
-y = 0
-Mostrar_ataque1 = True
-texto_completo = False
-direcao = ""
-
-##Variaveis de vida e etc
-vida = 92
-vida_max = 92
-barra_x = (tela.get_width()/2)
-barra_y = 650
-barra_largura = 200
-barra_altura = 40
-
+from modulos.alma import alma
+from modulos.janelas import janela
+from modulos.selecoes import *
+from modulos.item import *
+import modulos.ataques as atk
+import modulos.funcoes as func
+import modulos.constantes as cos
+from sys import exit
+                
+fases = [
+    atk.Gerarataques(atk.rodada1(), 10),
+    atk.Gerarataques(atk.rodada2(), 10)
+]
+fase_atual = 0
 
 
 while True:
-    tela.fill('black')
-    #checar o estado da alma para aplicar
-    if alma.estado == 1:
-        player_pos.y += 100 * dt
-        pygame.display.set_caption("Você está azul agora!")
-            
-    elif alma.estado == 2 :
-        player_pos.x = (tela.get_width())/2
-        player_pos.y = (tela.get_height())/2
-        speed = 0
-        verde()
-        pygame.display.set_caption("Você está verde!")
-    else:
-        pygame.display.set_caption("Você se enche de DETERMINAÇÃO")
-        speed = 300
+    cos.fps.tick((60))
+    pygame.display.update()
+    eventos = pygame.event.get()
+    confirmaAtaque = None
+    for evento in eventos:
+        if evento.type == KEYDOWN:
+            if evento.key == K_j:
+                alma.estado += 1
+                print("trocando estado")
+                if alma.estado >= len(alma.sprites):
+                    alma.estado = 0
+        if evento.type == KEYDOWN and janela.telaAtual == 'seleções':
+            confirmaAtaque = evento.key
+            if evento.key == K_RIGHT and not alma.rect.colliderect(botoes[3].botao) and not any(botao.mostraMsg for botao in botoes):
+                cos.x += 140
+            if evento.key == K_LEFT and not alma.rect.colliderect(botoes[0].botao) and not any(botao.mostraMsg for botao in botoes):
+                cos.x -= 140
+        
+            if evento.key == K_z:
+                cos.x = 30
+                cos.y = 220
+                for botao in botoes:
+                    botao.checaClique(evento.key)
+                if botoes[0].confirmaSelecao(evento.key):
+                    botoes[0].confirmaLuta()
+                    botoes[0].batalhaAcontece()
+                if botoes[1].confirmaSelecao(evento.key):
+                    botoes[1].confirmaAgir()
+                if botoes[2].confirmaSelecao(evento.key):
+                    botoes[2].confirmaTelaItem()
+                if botoes[3].confirmaSelecao(evento.key):
+                    botoes[3].confirmaPiedade()
 
-    if vida < 0:
-        print("Você morreu")
-        vida = 92
-        alma.morte()
-
-
-
-    artes.draw(tela)
-    artes.update()
-    ataques.clear()
-
-    if ataque1.mostrar:
-        ataque1.draw()     
-        resultado = ataque1.atualizar(alma.rect, escudo) 
-        if resultado == "dano":
-            vida -= 10
-            dano_snd.play()
-
-    if ataque2.mostrar:
-        ataque2.draw()      
-        resultado = ataque2.atualizar(alma.rect, escudo)
-        if resultado == "dano":
-            dano_snd.play()
-            vida -= 10
-
-    if ataque3.mostrar:
-        ataque3.draw()
-        resultado = ataque3.atualizar(alma.rect, escudo)
-        if resultado == "dano":
-            vida -= 20
-            dano_snd.play()        
-
-    if ataque4.mostrar:
-        ataque4.draw()
-        resultado = ataque4.atualizar(alma.rect, escudo)
-        if resultado == "dano":
-            vida -= 10
-            dano_snd.play()     
-        elif resultado == "parry":
-            parry_snd.play()
-
-    if ataque5.mostrar:
-        ataque5.draw()
-        resultado = ataque5.atualizar(alma.rect, escudo)
-        if resultado == "dano":
-            vida -= 10
-            dano_snd.play()     
-        elif resultado == "parry":
-            parry_snd.play()
-
-
-
-    #tratamento de teclas e eventos
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_x]:
-        speed -= 150
-
-    if keys[pygame.K_UP]:
-        player_pos.y -= speed * dt
-        direcao = "cima"
-    if keys[pygame.K_DOWN]:
-        player_pos.y += speed * dt
-        direcao = "baixo"
-
-    if keys[pygame.K_LEFT]:
-        player_pos.x -= speed * dt
-        direcao = "esquerda"
-
-    if keys[pygame.K_RIGHT]:
-        player_pos.x += speed * dt
-        direcao = "direita"
-
-    for event in pygame.event.get():
-        if event.type == QUIT:
+            if evento.key == K_x and not any(botao.mirando for botao in botoes):
+                for botao in botoes:
+                    botao.cancelaSelecao()
+                cos.x = 65
+                cos.y = 450
+        if evento.type == KEYDOWN and janela.telaAtual == 'inventário': #A movimentação ainda não está limitada (ajeitar depois)
+            if evento.key == K_DOWN:
+                cos.y += 35
+            if evento.key == K_UP:
+                cos.y -= 35
+            if evento.key == K_RIGHT:
+                cos.x += 200
+            if evento.key == K_LEFT:
+                cos.x -= 200
+            if evento.key == K_z:
+                func.consomeItem(evento.key)
+            if evento.key == K_x:
+                janela.mudarTela('seleções')
+                cos.x = 65
+                cos.y = 450
+        if evento.type == KEYDOWN and janela.telaAtual == 'lutaAcontecendo':
+            if evento.key == K_e and ataque.mostrar == False: #isso só vai ficar por enquanto (lembrar de tirar depois)
+                janela.mudarTela('seleções')
+                cos.x = 65
+                cos.y = 450
+        if evento.type == QUIT:
             pygame.quit()
             exit()
-        if event.type == KEYDOWN:
-            #print("Apertou algo!")
-            if event.key == K_F11:
-                #print("Pondo em tela cheia...")
-                pygame.display.toggle_fullscreen()
-            elif event.key == K_j:
-                print('mudando o estado da alma para ', {alma.estado})
-                alma.estado += 1
-                if alma.estado == 3:
-                    alma.estado = 0
-            elif event.key == K_k:
-                dialogo_atual += 1
-                texto_completo = False
-                    
+        if evento.type == KEYDOWN and janela.telaAtual == 'ações':
+            if evento.key == K_x:
+                janela.mudarTela('seleções')
+                cos.x = 65
+                cos.y = 450
 
-    #Barra de vida
-    barra_total = pygame.draw.rect(tela, (255, 0, 0), (barra_x, barra_y, barra_largura, barra_altura))
-    largura_atual = int((vida / vida_max) * barra_largura)
-    barra_atual = pygame.draw.rect(tela, (0, 255, 0), (barra_x, barra_y, largura_atual, barra_altura))
-    stts_vida = f"{vida}/{vida_max} : "
-    txtf = fonte.render(stts_vida, False, 'white')
-    tela.blit(txtf, ((barra_x)-100,(barra_y)))
+        if evento.type == cos.fim_do_ataque and janela.telaAtual == 'lutaAcontecendo':#Encerra o turno de ataque inimigo
+            ataque.mostrar = False
+            janela.mudarTela('seleções')
+            cos.x = 65
+            cos.y = 450
+            print("fim do ataque")
+            fase_atual += 1
+            botao.impedeTravaPos = False
+            botao.comecaBatalha = False
 
-    #tentativa de mostrar um texto
-    if texto_completo == False:
-        mostratexto(dialogos[dialogo_atual], False)  
+    
+    #Tela de seleções    
+    janela.corFundo()
+    janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
+    
+    if janela.telaAtual == 'lutaAcontecendo':
+        janela.desenhaCaixa((70, 190, 500, 180))
     else:
-        tela.blit(textbox, (400, 400))
+        janela.desenhaCaixa((10,180,620,180))
+        
+    almaDesaparece = any(botao.mirando for botao in botoes) or janela.telaAtual == 'transiçãoItens'
 
-    pygame.display.flip()    
-    dt = clock.tick(60)/1000
+    if almaDesaparece == False:
+        janela.tela.blit(alma.image, alma.rect)
+    alma.update()
+            
+    for botao in botoes:
+        botao.checaAlma()
+        botao.desenhaSelecoes()
+        botao.selecaoMensagem(cos.fonteBatalha)
+        botao.mirar(confirmaAtaque)
+        botao.batalhaAcontece()
+    confirmaAtaque = None
+    
+    #Tela de Luta
+    if botoes[0].comecaBatalha and janela.telaAtual == 'lutaAcontecendo':
+        if alma.estado == 1:
+            cos.y += 1
+            pygame.display.set_caption("Você está azul agora!")
+        elif alma.estado == 2:
+            cos.x = janela.tela.get_width() / 2
+            cos.y = janela.tela.get_height() / 2
+            velocidade = 0
+            func.verde()
+            pygame.display.set_caption("Você está verde!")
+        else:
+            pygame.display.set_caption("Você se enche de DETERMINAÇÃO")
+            velocidade = 3.2
+
+        teclas = pygame.key.get_pressed()
+        if teclas[pygame.K_x]:
+            velocidade = 2.2
+        if teclas[pygame.K_RIGHT]:
+            cos.x += 1 * velocidade
+            cos.direcao = 'direita'
+        if teclas[pygame.K_LEFT]:
+            cos.x -= 1  * velocidade
+            cos.direcao = 'esquerda'
+        if teclas[pygame.K_UP]:
+            cos.y -= 1 * velocidade
+            cos.direcao = 'cima'
+        if teclas[pygame.K_DOWN]:
+            cos.y += 1 * velocidade
+            cos.direcao = 'baixo'
+
+        fase = fases[fase_atual]
+        if not cos.ataque_iniciou:
+            pygame.time.set_timer(cos.fim_do_ataque, 10000)
+            cos.ataque_iniciou = True
+            print("ataque começa")
+
+        for ataque in fase.ataques:
+            if ataque.mostrar:
+                ataque.draw(janela.tela)
+                resultado = ataque.atualizar(alma.rect, func.escudo, alma.estado)
+                if resultado == "dano":
+                    cos.vidaAtual -= 10
+                    cos.dano_snd.play()
+                elif resultado == "parry":
+                    cos.parry_snd.play()
+
+    #Tela de Inventário
+    if janela.telaAtual == 'inventário':
+        func.printaItens()
+        for item in itens:
+            item.checaAlma()
+        
+    '''if janela.telaAtual == 'ações':
+            func.printaAcoes()
+            for acao in act.acoes:
+            acao.checaAlma
+    
+    
+    
+    '''
+        
+    if janela.telaAtual == 'transiçãoItens': #No segundo item usado a tela congela por conta do ataque que também só vai até o primeiro (ajeitar depois)
+        janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
+        janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260))
+        func.itemSelecionado.usar()
+        if func.mostraTransicao:
+            tempoAtual = pygame.time.get_ticks()
+            if tempoAtual - func.transicaoTempo > 2000:
+                mostraTransicao = False
+                botoes[0].comecaBatalha = True
+    
+    #Tela de Gameover
+    if cos.vidaAtual <= 0:
+        janela.mudarTela('gameover')
+        tocouGameOver = False
+        while janela.telaAtual == 'gameover':
+            if not tocouGameOver:
+                pygame.mixer.music.fadeout(280)
+                gameoverMusica = pygame.mixer.music.load('assets/sounds/gameovertheme.mp3')
+                pygame.mixer.music.set_volume(0.6)
+                pygame.mixer.music.play(-1)
+                tocouGameOver = True
+                janela.atualizaTela()
+            
+            janela.corFundo()
+            janela.tela.blit(cos.gameoverImg, (130,15))
+            janela.escreveTexto('Pressione R para reiniciar', cos.fonte, (255,255,255), (50, 400))
+            janela.atualizaTela()
+                   
+            for evento in pygame.event.get():
+                if evento.type == QUIT:
+                    print("fechando o jogo")
+                    pygame.quit()
+                    exit()
+                elif evento.type == KEYDOWN:
+                    if evento.key == K_r:
+                        func.reiniciar_jogo()
+  
+    janela.atualizaTela()

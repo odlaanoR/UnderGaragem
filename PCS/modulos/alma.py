@@ -8,10 +8,12 @@ pygame.init()
 class Alma(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.sprites = []
-        self.sprites.append(pygame.image.load('assets/sprites/alma.png'))
-        self.sprites.append(pygame.image.load('assets/sprites/almaazul.png'))
-        self.sprites.append(pygame.image.load('assets/sprites/almaverde.png'))       
+        self.sprites = [
+        pygame.image.load('assets/sprites/alma.png'),
+        pygame.image.load('assets/sprites/almaazul.png'),
+        pygame.image.load('assets/sprites/almaverde.png'),    
+        ]
+        self.game_over = pygame.image.load('assets/sprites/almaquebrada.png')
         self.estado = 0
         self.image = self.sprites[self.estado]
         self.image = pygame.transform.scale(self.image, (16, 16))

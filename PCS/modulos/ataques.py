@@ -1,35 +1,60 @@
 import pygame
 from modulos.janelas import janela
 
-class Ataque():
-    def __init__(self, cor , ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, vel):
+class ataque():
+    def __init__(self, cor, ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y):
         self.retangulo = pygame.Rect(ataque_x, ataque_y, ataque_w, ataque_h)
+        self.y = ataque_y
+        self.x = ataque_x
         self.mov_x = mov_x
         self.mov_y = mov_y
-        self.vel = vel
         self.cor = cor
         self.mostrar = True
-        self.contador = 0 #opa coisa nova, não sei se vai ficar aqui por mt tempo, mas nesse ataque padrão vai servir (explico lá embaixo)
-
-    def atualizar(self, alma_rect):
-        if self.mostrar == True:
+    
+    def atualizar(self, alma_rect, escudo, alma_estado):
+        if self.mostrar:
             self.retangulo.x += self.mov_x
             self.retangulo.y += self.mov_y
-            if self.retangulo.x >= 530:
-                self.retangulo.x = 80
-                self.contador += 1
+            if self.retangulo.x >= janela.tela.get_width() or self.retangulo.x < 0:
+                self.retangulo.x = self.x
+            if self.retangulo.y >= janela.tela.get_height() or self.retangulo.y < 0:
+                self.retangulo.y = self.y
             if self.retangulo.colliderect(alma_rect):
                 print("colidiu!")
                 self.mostrar = False
-                return True
-            return False
-            
-    def draw(self):
-        if self.mostrar:
-            self.sla1 = pygame.draw.rect(janela.tela, self.cor, self.retangulo)
-    
-ataque = Ataque((255,255,255), 80, 220, 20, 20, 3, 0, 5)
-ataque2 = Ataque('white', 90, 250, 40, 40, 10, 0, 5)
-ataque3 = Ataque('red', 150, 150, 30, 30, 0, 0, 0)
+                return "dano"
+            elif self.retangulo.colliderect(escudo) and alma_estado == 2:
+                print("Parry!")
+                self.mostrar = False
+                return "parry"         
+        return False        
 
-print('carregando ataques...')
+    def draw(self, surface):
+        if self.mostrar:
+            pygame.draw.rect(surface, self.cor, self.retangulo)
+
+class Gerarataques():
+    def __init__(self, rodada, duracao):
+        self.duracao = duracao
+        self.rodada = rodada
+        self.ataques = self.rodada    
+
+def rodada1():
+    return[
+    ataque('white', 220, 550, 40, 40, 10, 0),
+    ataque('white', 500, 500, 40, 40, 10, 0 ),
+    ataque('red', 150, 150, 30, 30, 0, 0),
+    ataque('green', 0, (janela.tela.get_height()/2), 40, 40, 3, 0),
+    ataque('green', 1200, (janela.tela.get_height()/2), 40, 40, -5, 0),
+    ]
+
+def rodada2():
+    return[
+    ataque('blue', 220, 550, 40, 40, 10, 0),
+    ataque('blue', 500, 500, 40, 40, 10, 0 ),
+    ataque('blue', 150, 150, 30, 30, 10, 10),
+    ataque('blue', 0, 0, 30, 30, 10, 10),
+    ataque('blue', 50, 0, 30, 30, 10, 10),
+    ataque('blue', 150, 80, 30, 30, 10, 20),
+    ataque('blue', 300, 100, 30, 30, 10, 20),
+    ]
