@@ -9,7 +9,8 @@ from modulos.ataques import *
 import modulos.constantes as cos
 
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
-
+itemSelecionado = None
+consumiuItem = False
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciar_jogo():
     global vidaAtual, gameover, x, y, musicaFundo, itens, ataque, ataque2, ataque3
@@ -57,14 +58,11 @@ def printaItens():
 #Se o jogador estiver na tela do inventário e confirmar a ação (clicando no Z) estando em colisao com qualquer item, ele será redirecionado para a tela que confirma qual item ele usou e o efeito que ele faz.
 def consomeItem(tecla):
     global itemSelecionado, consumiuItem, mostraTransicao, transicaoTempo
-    itemSelecionado = None
-    consumiuItem = False
     if janela.telaAtual == 'inventário' and tecla == K_z:
         for item in itens:
             if alma.rect.colliderect(item.colisao):
                 itemSelecionado = item
                 janela.mudarTela('transiçãoItens')
-                consumiuItem = True
                 transicaoTempo = pygame.time.get_ticks()
                 mostraTransicao = True
                 clicaItem = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
