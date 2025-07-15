@@ -13,11 +13,13 @@ itemSelecionado = None
 consumiuItem = False
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciar_jogo():
-    global vidaAtual, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases
+    global vidaAtual, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases, usouConversar, usouVasculhar
     cos.vidaAtual = 70
     cos.x = 65
     cos.y = 450
     gameover = False
+    cos.usouConversar = 0
+    cos.usouVasculhar = 0
     cos.fase_atual = 0
     cos.ataque_iniciou = False
     musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
