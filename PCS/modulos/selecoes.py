@@ -49,7 +49,13 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
                 global x, y
                 cos.x = 155
                 cos.y = 220
-                janela.mudarTela('inventário') 
+                janela.mudarTela('inventário')
+                self.mostraMsg = False
+            elif self.mensagem == 'Checar':
+                cos.x = 40
+                cos.y = 220
+                janela.mudarTela('ações')
+                self.mostraMsg = False
             else:
                 self.mostraMsg = True
     def mirar(self, tecla):
