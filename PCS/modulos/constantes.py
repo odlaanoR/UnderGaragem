@@ -25,6 +25,7 @@ usouVasculhar = 0
 
 #Fontes
 fonte = pygame.font.SysFont('arial', 30, True, False)
+fonteCustomizada = pygame.font.Font('assets/fonte2.ttf', 23)
 fonteBatalha = pygame.font.SysFont('comicsans', 20, True, False)
 pygame.display.set_caption('Undergaragem')
 
