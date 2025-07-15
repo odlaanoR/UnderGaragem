@@ -78,10 +78,10 @@ while True:
             pygame.quit()
             exit()
         if evento.type == KEYDOWN and janela.telaAtual == 'ações':
-           if evento.key == K_RIGHT:
+          if evento.key == K_RIGHT:
                 if alma.rect.colliderect(act.acoes[0].colisao) or alma.rect.colliderect(act.acoes[1].colisao):
                     cos.x += 200
-            if evento.key == K_LEFT:
+          if evento.key == K_LEFT:
                 if alma.rect.colliderect(act.acoes[2].colisao) or alma.rect.colliderect(act.acoes[3].colisao):
                     cos.x -= 200
             if evento.key == K_DOWN:
