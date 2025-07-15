@@ -13,11 +13,13 @@ itemSelecionado = None
 consumiuItem = False
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciar_jogo():
-    global vidaAtual, gameover, x, y, musicaFundo, itens, ataque, ataque2, ataque3
+    global vidaAtual, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases
     cos.vidaAtual = 70
     cos.x = 65
     cos.y = 450
     gameover = False
+    cos.fase_atual = 0
+    cos.ataque_iniciou = False
     musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
     pygame.mixer.music.set_volume(0.45)
     pygame.mixer.music.play(-1)
@@ -33,10 +35,11 @@ def reiniciar_jogo():
         Item('Comida8','sla8'),
         Item('Comida9','sla9'),
     ]
-    ataque = ataque((255,255,255), 80, 220, 20, 20, 3, 0, 5) #o ataque não volta depois do gameover (ajeitar isso depois)
-    ataque2 = ataque('white', 90, 250, 40, 40, 10, 0, 5)
-    ataque3 = ataque('red', 150, 150, 30, 30, 0, 0, 0)
-    
+    print('reiniciando jogo')
+    fases = [
+        atk.Gerarataques(atk.rodada1(), 10),
+        atk.Gerarataques(atk.rodada2(), 10)
+    ]
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens():
     iy = 0
@@ -68,6 +71,44 @@ def consomeItem(tecla):
                 clicaItem = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
                 clicaItem.set_volume(0.4)
                 clicaItem.play()
+                
+def printaAcoes():
+    ix = 0
+    iy = 0
+    colisaoAcoes = []
+    for acao in act.acoes:
+        if iy <= 1:
+            posicaoAcao = (55 + ix * 200, 205 + iy * 35)
+            acao.colisao = pygame.Rect(posicaoAcao[0] - 20, posicaoAcao[1] + 10, 50, 10)
+            colisaoAcoes.append(acao.colisao)
+            janela.escreveTexto(f'{acao.nome}', cos.fonteBatalha, (255,255,255), posicaoAcao)
+            iy += 1
+        else:
+            iy = 0
+            ix += 1
+            posicaoAcao = (55 + ix * 200, 205 + iy * 35)
+            acao.colisao = pygame.Rect(posicaoAcao[0] - 20, posicaoAcao[1] + 10, 50, 10)
+            colisaoAcoes.append(acao.colisao)
+            janela.escreveTexto(f'{acao.nome}', cos.fonteBatalha, (255,255,255), posicaoAcao)
+            iy += 1
+            
+def escolheAcao(tecla):
+    global acaoSelecionada, usouAcao, mostraTransicao, transicaoTempo
+    acaoSelecionada = None
+    usouAcao = False
+    if janela.telaAtual == 'ações' and tecla == K_z:
+        for acao in act.acoes:
+            if alma.rect.colliderect(acao.colisao):
+                acaoSelecionada = acao
+                if acao.nome == 'Conversar':
+                    cos.usouConversar += 1
+                elif acao.nome == 'Vasculhar':
+                    cos.usouVasculhar += 1       
+                janela.mudarTela('transiçãoAções')
+                transicaoTempo = pygame.time.get_ticks()
+                mostraTransicao = True
+                cos.clica_som.set_volume(0.4)
+                cos.clica_som.play()
 
 def verde():
     global escudo
