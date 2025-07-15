@@ -68,9 +68,8 @@ def consomeItem(tecla):
                 janela.mudarTela('transiçãoItens')
                 transicaoTempo = pygame.time.get_ticks()
                 mostraTransicao = True
-                clicaItem = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
-                clicaItem.set_volume(0.4)
-                clicaItem.play()
+                cos.clica_som.set_volume(0.4)
+                cos.clica_som.play() 
                 
 def printaAcoes():
     ix = 0
