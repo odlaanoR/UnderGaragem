@@ -26,5 +26,18 @@ class Janelas():
     def desenhaCaixa(self, caixa):
         self.caixa = pygame.draw.rect(janela.tela, (255,255,255), caixa, width=7)
         
+class Colisoes():
+    def __init__(self, pos_x, pos_y, largura, altura):
+        self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
+        
+    def desenhaColisao(self):
+        pygame.draw.rect(janela.tela, (255,0,0), self.rect)
+        
 janela = Janelas(largura,altura)
+colisoes = [
+    Colisoes(70, 198, 500, 7), #cima
+    Colisoes(76, 190, 7, 175), #esquerda
+    Colisoes(70, 356, 500, 7), #baixo
+    Colisoes(556, 190, 7, 175), #direita
+]
 print('janelas carregando...')
