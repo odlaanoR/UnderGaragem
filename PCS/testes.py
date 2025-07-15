@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from modulos.alma import alma
-from modulos.janelas import janela
+from modulos.janelas import *
 from modulos.selecoes import *
 from modulos.item import *
 import modulos.ataques as atk
