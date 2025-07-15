@@ -70,6 +70,9 @@ while True:
                 cos.x = 65
                 cos.y = 450
         if evento.type == KEYDOWN and janela.telaAtual == 'lutaAcontecendo':
+           for colisao in colisoes:
+            if alma.rect.colliderect(colisao.rect):
+                print('bateu')
             if evento.key == K_e and ataque.mostrar == False: #isso só vai ficar por enquanto (lembrar de tirar depois)
                 janela.mudarTela('seleções')
                 cos.x = 65
