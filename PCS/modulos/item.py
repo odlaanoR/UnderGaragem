@@ -17,8 +17,10 @@ class Item():
         global vidaAtual
         if self.nome == 'Bolo de Sushi': 
             cos.vidaAtual = min(cos.vidaAtual + 30, cos.vida)
+            cos.cura_som.play()
         elif self.nome == 'Cuscuz Paulista':
-            cos.vidaAtual -= 1
+            cos.vidaAtual = 1
+            cos.dano_snd.play()
         if self.quantidade > 0:
             self.quantidade -= 1
         if self.quantidade <= 0 and self in itens:
