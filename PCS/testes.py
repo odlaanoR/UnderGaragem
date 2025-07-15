@@ -116,8 +116,12 @@ while True:
     #Tela de seleções    
     janela.corFundo()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
+    janela.escreveTexto('Lutar', cos.fonteCustomizada, botoes[0].cor, (85, 433))
+    janela.escreveTexto('Agir', cos.fonteCustomizada, botoes[1].cor, (238, 433))
+    janela.escreveTexto('Item', cos.fonteCustomizada, botoes[2].cor, (373, 433))
+    janela.escreveTexto('Poupar', cos.fonteCustomizada, botoes[3].cor, (495, 433))
     
-    if janela.telaAtual == 'lutaAcontecendo':
+    if janela.telaAtual == 'lutaAcontecendo' or janela.telaAtual == 'inventário':
         janela.desenhaCaixa((70, 190, 500, 180))
     else:
         janela.desenhaCaixa((10,180,620,180))
@@ -151,19 +155,18 @@ while True:
             pygame.display.set_caption("Você se enche de DETERMINAÇÃO")
             velocidade = 3.2
 
-        teclas = pygame.key.get_pressed()
         if teclas[pygame.K_x]:
-            velocidade = 2.2
-        if teclas[pygame.K_RIGHT]:
+            velocidade = 2.7
+        if teclas[pygame.K_RIGHT] and not alma.rect.colliderect(colisoes[3].rect):
             cos.x += 1 * velocidade
             cos.direcao = 'direita'
-        if teclas[pygame.K_LEFT]:
+        if teclas[pygame.K_LEFT] and not alma.rect.colliderect(colisoes[1].rect):
             cos.x -= 1  * velocidade
             cos.direcao = 'esquerda'
-        if teclas[pygame.K_UP]:
+        if teclas[pygame.K_UP] and not alma.rect.colliderect(colisoes[0].rect):
             cos.y -= 1 * velocidade
             cos.direcao = 'cima'
-        if teclas[pygame.K_DOWN]:
+        if teclas[pygame.K_DOWN] and not alma.rect.colliderect(colisoes[2].rect):
             cos.y += 1 * velocidade
             cos.direcao = 'baixo'
 
@@ -243,7 +246,7 @@ while True:
                 mostraTransicao = False
                 botoes[0].comecaBatalha = True
                 cos.ataque_iniciou = False
-        #Tela de Piedade
+    #Tela de Piedade
     if janela.telaAtual == 'piedade':
         janela.escreveTexto('Mas não estava amarelo', cos.fonteBatalha, (255,255,255), (40,210))
         if func.mostraTransicao:
