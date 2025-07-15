@@ -13,7 +13,7 @@ itemSelecionado = None
 consumiuItem = False
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciar_jogo():
-    global vidaAtual, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases, usouConversar, usouVasculhar
+    global vidaAtual, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases, usouConversar, usouVasculhar, eventos
     cos.vidaAtual = 70
     cos.x = 65
     cos.y = 450
@@ -42,6 +42,18 @@ def reiniciar_jogo():
         atk.Gerarataques(atk.rodada1(), 10),
         atk.Gerarataques(atk.rodada2(), 10)
     ]
+    for evento in eventos:
+        for botao in botoes:      
+            if evento.type == cos.fim_do_ataque and janela.telaAtual == 'lutaAcontecendo':#Encerra o turno de ataque inimigo
+                ataque.mostrar = False
+                janela.mudarTela('seleções')
+                cos.x = 65
+                cos.y = 450
+                print("fim do ataque")
+                botao.impedeTravaPos = False
+                botao.comecaBatalha = False
+                cos.fase_atual += 1
+    
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens():
     iy = 0
