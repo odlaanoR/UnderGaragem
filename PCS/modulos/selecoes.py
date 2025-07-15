@@ -90,9 +90,8 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
                     
     def confirmaSelecao(self, tecla):
         if self.mostraMsg and tecla == K_z and alma.rect.colliderect(self.gambiarraMsg):
-            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
-            clicaAcao.set_volume(0.4)
-            clicaAcao.play()
+            cos.clica_som.set_volume(0.4)
+            cos.clica_som.play() 
             self.mostraMsg = False
             return True
         return False
