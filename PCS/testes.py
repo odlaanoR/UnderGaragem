@@ -14,7 +14,6 @@ fases = [
     atk.Gerarataques(atk.rodada1(), 10),
     atk.Gerarataques(atk.rodada2(), 10)
 ]
-fase_atual = 0
 
 while True:
     cos.fps.tick((60))
@@ -110,10 +109,9 @@ while True:
               cos.x = 65
               cos.y = 450
               print("fim do ataque")
-              fase_atual += 1
               botao.impedeTravaPos = False
               botao.comecaBatalha = False
-
+              cos.fase_atual += 1
     #Tela de seleções    
     janela.corFundo()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
@@ -168,7 +166,7 @@ while True:
             cos.y += 1 * velocidade
             cos.direcao = 'baixo'
 
-        fase = fases[fase_atual]
+        fase = fases[cos.fase_atual]
         if not cos.ataque_iniciou:
             pygame.time.set_timer(cos.fim_do_ataque, 10000)
             cos.ataque_iniciou = True
