@@ -4,8 +4,8 @@ from modulos.janelas import janela
 from modulos.selecoes import *
 from modulos.item import *
 from modulos.alma import alma
-#import modulos.acoes as act
-from modulos.ataques import *
+import modulos.ataques as atk
+import modulos.acoes as act
 import modulos.constantes as cos
 
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
