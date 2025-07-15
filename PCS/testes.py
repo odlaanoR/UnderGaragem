@@ -7,6 +7,7 @@ from modulos.item import *
 import modulos.ataques as atk
 import modulos.funcoes as func
 import modulos.constantes as cos
+import modulos.acoes as act
 from sys import exit
                 
 fases = [
@@ -78,22 +79,41 @@ while True:
             pygame.quit()
             exit()
         if evento.type == KEYDOWN and janela.telaAtual == 'ações':
+           if evento.key == K_RIGHT:
+                if alma.rect.colliderect(act.acoes[0].colisao) or alma.rect.colliderect(act.acoes[1].colisao):
+                    cos.x += 200
+            if evento.key == K_LEFT:
+                if alma.rect.colliderect(act.acoes[2].colisao) or alma.rect.colliderect(act.acoes[3].colisao):
+                    cos.x -= 200
+            if evento.key == K_DOWN:
+                if alma.rect.colliderect(act.acoes[0].colisao) or alma.rect.colliderect(act.acoes[2].colisao):
+                    cos.y += 35
+            if evento.key == K_UP:
+                if alma.rect.colliderect(act.acoes[1].colisao) or alma.rect.colliderect(act.acoes[3].colisao):
+                    cos.y -= 35     
+            if evento.key == K_z:
+                func.escolheAcao(evento.key)
             if evento.key == K_x:
                 janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
+              
+        if evento.type == KEYDOWN and janela.telaAtual == 'piedade':
+            if evento.key == K_z:
+                func.mostraTransicao = True
+                func.transicaoTempo = pygame.time.get_ticks()
+              
+        for botao in botoes:
+          if evento.type == cos.fim_do_ataque and janela.telaAtual == 'lutaAcontecendo':#Encerra o turno de ataque inimigo
+              ataque.mostrar = False
+              janela.mudarTela('seleções')
+              cos.x = 65
+              cos.y = 450
+              print("fim do ataque")
+              fase_atual += 1
+              botao.impedeTravaPos = False
+              botao.comecaBatalha = False
 
-        if evento.type == cos.fim_do_ataque and janela.telaAtual == 'lutaAcontecendo':#Encerra o turno de ataque inimigo
-            ataque.mostrar = False
-            janela.mudarTela('seleções')
-            cos.x = 65
-            cos.y = 450
-            print("fim do ataque")
-            fase_atual += 1
-            botao.impedeTravaPos = False
-            botao.comecaBatalha = False
-
-    
     #Tela de seleções    
     janela.corFundo()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
@@ -103,8 +123,8 @@ while True:
     else:
         janela.desenhaCaixa((10,180,620,180))
         
-    almaDesaparece = any(botao.mirando for botao in botoes) or janela.telaAtual == 'transiçãoItens'
-
+    almaDesaparece = any(botao.mirando for botao in botoes) or janela.telaAtual == 'transiçãoItens' or janela.telaAtual == 'transiçãoAções' or janela.telaAtual == 'piedade'
+  
     if almaDesaparece == False:
         janela.tela.blit(alma.image, alma.rect)
     alma.update()
@@ -164,33 +184,75 @@ while True:
                 elif resultado == "parry":
                     cos.parry_snd.play()
 
-    #Tela de Inventário
-    if janela.telaAtual == 'inventário':
-        func.printaItens()
-        for item in itens:
-            item.checaAlma()
-        
-    '''if janela.telaAtual == 'ações':
-            func.printaAcoes()
-            for acao in act.acoes:
-            acao.checaAlma
-    '''
-        
-    if janela.telaAtual == 'transiçãoItens': #No segundo item usado a tela congela por conta do ataque que também só vai até o primeiro (ajeitar depois)
-        janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
-        janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260))
-
-        if not func.consumiuItem:
-            print(f"[antes de usar item] vidaAtual = {cos.vidaAtual}")
-            func.itemSelecionado.usar()
-            print(f"[depois de usar item] vidaAtual = {cos.vidaAtual}")
-            func.consumiuItem = True
-          
+    #Tela de Agir
+    if janela.telaAtual == 'ações':   
+        func.printaAcoes()
+        for acao in act.acoes:
+            acao.checaAlma()
+                
+    if janela.telaAtual == 'transiçãoAções':
+        acao = func.acaoSelecionada
+        if acao.nome == 'Conversar':
+            if cos.usouConversar == 1:
+                textoEfeito = 'Você tenta dialogar com o Wilson Tremba...'
+                texto2 = 'Mas ele não respondeu'
+            elif cos.usouConversar == 2:
+                textoEfeito = 'Wilson Tremba se tremeu ao você elogiar seu relógio.'
+                texto2 = ''
+            elif cos.usouConversar == 3:
+                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
+                texto2 = ''
+        elif acao.nome == 'Vasculhar':
+            if cos.usouVasculhar == 1:
+                textoEfeito = 'Você olha ao seu redor em busca de algo que'
+                texto2 = 'possa lhe ajudar... Nada'
+            elif cos.usouVasculhar == 2:
+                textoEfeito = 'Você achou um rato, ele faz barulho'
+                texto2 = ''       
+        elif acao.nome == 'Checar':
+            textoEfeito = acao.efeito
+            texto2 = ''
+        elif acao.nome == 'Implorar por Piedade':
+            textoEfeito = acao.efeito
+            texto2 = ''
+            
+        janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (50,220))  
+        janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (50,250))
+              
         if func.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
             if tempoAtual - func.transicaoTempo > 2000:
                 mostraTransicao = False
                 botoes[0].comecaBatalha = True
+                cos.ataque_iniciou = False  
+    #Tela de Inventário
+    if janela.telaAtual == 'inventário':
+        func.printaItens()
+        for item in itens:
+            item.checaAlma()
+          
+    if janela.telaAtual == 'transiçãoItens': #No segundo item usado a tela congela por conta do ataque que também só vai até o primeiro (ajeitar depois)
+        janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
+        janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260))
+
+        if not func.consumiuItem:
+            func.itemSelecionado.usar()
+            func.consumiuItem = True
+        if func.mostraTransicao:
+            tempoAtual = pygame.time.get_ticks()
+            if tempoAtual - func.transicaoTempo > 2000:
+                mostraTransicao = False
+                botoes[0].comecaBatalha = True
+                cos.ataque_iniciou = False
+        #Tela de Piedade
+    if janela.telaAtual == 'piedade':
+        janela.escreveTexto('Mas não estava amarelo', cos.fonteBatalha, (255,255,255), (40,210))
+        if func.mostraTransicao:
+            tempoAtual = pygame.time.get_ticks()
+            if tempoAtual - func.transicaoTempo > 2000:
+                mostraTransicao = False
+                botoes[0].comecaBatalha = True
+                cos.ataque_iniciou = False
     
     #Tela de Gameover
     if cos.vidaAtual <= 0:
