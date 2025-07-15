@@ -11,8 +11,9 @@ class Acao():
         self.efeito = efeito
         self.colisao = pygame.Rect(0,0,0,0)
         self.passou = False
+        self.contadorEfeito = 0
         
-    '''def checaAlma(self):
+    def checaAlma(self):
         if alma.rect.colliderect(self.colisao):
             if self.passou:
                 passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
@@ -20,11 +21,11 @@ class Acao():
                 passaAcao.play()
                 self.passou = False
         else:
-            self.passou = True'''
-      
+            self.passou = True
+            
 acoes = [
     Acao('Checar', 'Wilson Tremba, 99 ATK, 99 DEF, o patrão'),
-    Acao('Vasculhar', 'Você procura por algo nos arredores...'),
-    Acao('Conversar', 'Você tenta dialogar com o Wilson Tremba...'),
-    Acao('Implorar por Piedade', 'Você implora por piedade, mas o SEU nome não estava amarelo.')
+    Acao('Vasculhar', ''),
+    Acao('Conversar', ''),
+    Acao('Implorar por Piedade', 'Mas o SEU nome não estava amarelo.')
 ]   
