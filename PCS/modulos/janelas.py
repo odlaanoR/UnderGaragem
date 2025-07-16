@@ -3,6 +3,7 @@ from modulos.constantes import largura, altura
 from pygame.locals import *
 pygame.init()
 
+#Essa classe é o que define a largura e altura das janelas. 
 class Janelas():
     def __init__(self,largura,altura):
         self.largura = largura
@@ -25,7 +26,7 @@ class Janelas():
         
     def desenhaCaixa(self, caixa):
         self.caixa = pygame.draw.rect(janela.tela, (255,255,255), caixa, width=7)
-        
+             
 class Colisoes():
     def __init__(self, pos_x, pos_y, largura, altura):
         self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
