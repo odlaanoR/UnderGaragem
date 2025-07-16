@@ -1,4 +1,5 @@
 import pygame
+
 pygame.init()
 
 #Definições Padrões
@@ -9,15 +10,18 @@ x = 65
 y = 450
 transicaoTempo = 0
 mostraTransicao = False
+
 fps = pygame.time.Clock()
 vida = 92
 vidaAtual = 70
 direcao = None
 
-#relogio de ataques
+#rVariaveis de ataques e etc
 ataque_iniciou = False
 fim_do_ataque = pygame.event.custom_type()
+fimInv = pygame.event.custom_type()
 fase_atual = 0
+tempoInv = 900
 
 #Contador de Ações
 usouConversar = 0
@@ -31,6 +35,7 @@ pygame.display.set_caption('Undergaragem')
 
 #Imagens
 gameoverImg = pygame.image.load('assets/sprites/gameover.png')
+gameoverImg = pygame.transform.scale(gameoverImg, (600, 300))
 icon = pygame.image.load('assets/sprites/alma.png')
 pygame.display.set_icon(icon)
 
