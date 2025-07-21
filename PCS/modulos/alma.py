@@ -41,6 +41,12 @@ class Alma(pygame.sprite.Sprite):
         self.acertavel = False
         pygame.time.set_timer(cos.fimInv, cos.tempoInv, 1)
 
+    def trocaestado(self, novoestado=0):#auto explicativo
+        if novoestado == '+':
+            self.estado += 1
+        else:
+            self.estado = int(novoestado)
+
 alma = Alma()
 artes = pygame.sprite.Group()
 artes.add(alma)

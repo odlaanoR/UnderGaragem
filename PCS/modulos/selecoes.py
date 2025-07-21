@@ -41,13 +41,14 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def checaClique(self, tecla):
         if tecla == K_z and alma.rect.colliderect(self.botao):
-            cos.clica_som.set_volume(0.4)
-            cos.clica_som.play()
+            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
+            clicaAcao.set_volume(0.4)
+            clicaAcao.play()
             self.gambiarraMsg = pygame.Rect(30, 215, 10, 10)
             if self.mensagem == 'Item':
                 global x, y
-                cos.x = 160
-                cos.y = 230
+                cos.x = 155
+                cos.y = 220
                 janela.mudarTela('inventário')
                 self.mostraMsg = False
             elif self.mensagem == 'Checar':
@@ -86,7 +87,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             cos.y = 260
             self.impedeTravaPos = True
             print('batalha acontece')
-                             
+                    
     def confirmaSelecao(self, tecla):
         if self.mostraMsg and tecla == K_z and alma.rect.colliderect(self.gambiarraMsg):
             cos.clica_som.set_volume(0.4)
@@ -108,13 +109,15 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         
     def confirmaAgir(self):
         janela.mudarTela('ações')
-    
+        print('poggers')
+        
     def confirmaTelaItem(self):
         janela.mudarTela('inventário')
             
     def confirmaPiedade(self):
         janela.mudarTela('piedade')
-    
+        print('Mas não estava amarelo')
+        
 botoes = [
     Selecoes(50, "Wilson Tremba"),
     Selecoes(190, "Checar"),

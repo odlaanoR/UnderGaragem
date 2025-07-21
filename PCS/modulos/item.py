@@ -38,7 +38,7 @@ class Item():
             
 itens = [
     Item('Bolo de Sushi', 'Você recupera 30 de vida'),
-    Item('Cuscuz Paulista','NAOOOOOOOOOOOOOOOOOOOOOOO'),
+    Item('Cuscuz Paulista','Eu não acredito que você realmente fez isso'),
     Item('Comida3','sla3'),
     Item('Comida4','sla4'),
     Item('Comida5','sla5'),
