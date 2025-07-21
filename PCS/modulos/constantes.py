@@ -22,6 +22,13 @@ fim_do_ataque = pygame.event.custom_type()
 fimInv = pygame.event.custom_type()
 fase_atual = 0
 tempoInv = 900
+defesa = 0
+
+#Efeitos dos Itens
+efeito100limite = False
+vidaAntes100limite = False
+efeitoVerde = False
+efeitoMcInfeliz = False
 
 #Contador de Ações
 usouConversar = 0
@@ -29,7 +36,7 @@ usouVasculhar = 0
 
 #Fontes
 fonte = pygame.font.SysFont('arial', 30, True, False)
-fonteCustomizada = pygame.font.SysFont('timesnewroman', 23)
+fonteCustomizada = pygame.font.Font('assets/fonte2.ttf', 23)
 fonteBatalha = pygame.font.SysFont('comicsans', 20, True, False)
 pygame.display.set_caption('Undergaragem')
 
@@ -41,7 +48,7 @@ pygame.display.set_icon(icon)
 
 #Sons/Músicas
 musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
-pygame.mixer.music.set_volume(0.45)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play(-1)
 dano_snd = pygame.mixer.Sound('assets/sounds/dano.mp3')
 parry_snd = pygame.mixer.Sound('assets/sounds/parry.mp3')
@@ -58,6 +65,5 @@ dialogos = (
     "*O ar estrala de puro terror",
     "*Estrelas caem ao seu redor"
 )
-
 
 print('preparando constantes...')
