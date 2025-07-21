@@ -63,7 +63,7 @@ def printaItens():
     ix = 0
     colisaoItens = []
     for item in itens:
-        if iy <= 3:
+        if iy < 4:
             posicaoItem = (175 + ix * 200, 215 + iy * 35)
             item.colisao = pygame.Rect(posicaoItem[0] - 20, posicaoItem[1] + 10, 50, 10) 
             colisaoItens.append(item.colisao)
@@ -74,6 +74,11 @@ def printaItens():
         else:
             iy = 0
             ix += 1
+            posicaoItem = (175 + ix * 200, 215 + iy * 35)
+            item.colisao = pygame.Rect(posicaoItem[0] - 20, posicaoItem[1] + 10, 50, 10) 
+            colisaoItens.append(item.colisao)
+            janela.escreveTexto(f'{item.nome}', cos.fonteBatalha, (255,255,255), posicaoItem)
+            iy += 1
 def printaAcoes():
     ix = 0
     iy = 0
