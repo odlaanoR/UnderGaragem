@@ -25,7 +25,10 @@ class Alma(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.center = cos.x, cos.y
-        self.image = self.sprites[self.estado]
+        if self.acertavel == False:
+            self.image = pygame.image.load('assets/sprites/almavazia.png')
+        else:
+            self.image = self.sprites[self.estado]
         self.image = pygame.transform.scale(self.image, (16, 16))
 
     def iframe(self):

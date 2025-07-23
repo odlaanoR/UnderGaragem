@@ -42,13 +42,19 @@ class Item():
             cos.cura_som.play()
         elif self.nome == 'MacLanche Infeliz':
             cos.efeitoMcInfeliz = True
-            cos.defesa = 2
+            cos.jogador_def += 2
+            cos.jogador_atk += 5
             cos.cura_som.play()
         elif self.nome == 'Gororoba Misteriosa':
             cos.cura_som.play()
             vidaAleatoria = randint(0,70)
             cos.vidaAtual = min(cos.vidaAtual + vidaAleatoria, cos.vida)
             print(f'Curou {vidaAleatoria} com A gororoba')
+
+        elif self.nome == 'O revólver que matou "Felipe"':
+            cos.jogador_atk += 998
+
+
         if self.quantidade > 0:
             self.quantidade -= 1
         if self.quantidade <= 0 and self in itens:
@@ -71,8 +77,9 @@ itens = [
     Item('100 limite','Você se sente ilimitado (por uma rodada)'),
     Item('Verde','+10 HP Você está verde???????'),
     Item('BiGaragem','Você recupera 50 de vida'),
-    Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF'),
+    Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF, +ATK'),
     Item('Gororoba Misteriosa','????????'),
+    Item('O revólver que matou "Felipe"', 'Você equipou essa coisa, você escuta gritos ao seu redor')
 ]
 
 print('item carregando...')

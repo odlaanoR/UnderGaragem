@@ -53,12 +53,12 @@ def reiniciarJogo():
                 janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
-                print("fim do ataque")
+                #print("fim do ataque")
                 botao.impedeTravaPos = False
                 botao.comecaBatalha = False
                 cos.fase_atual += 1  
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
-def printaItens():
+def printaItens(botoes):
     iy = 0
     ix = 0
     colisaoItens = []
@@ -146,5 +146,50 @@ def verde():
         escudo = pygame.draw.line(janela.tela, 'blue', ((janela.tela.get_width()/2)+30, (janela.tela.get_height()/2)+30), ((janela.tela.get_width()/2)+30, (janela.tela.get_height()/2)-30), 4)
         return escudo
     
+def ataque_player(mira):
+
+    if mira < 300:
+        precisao = mira/300
+        print(precisao)
+    elif mira > 300:
+        precisao = max(0, 1 - (mira - 300)/300)
+        print(precisao)
+    else:
+        precisao = 1.5
+        print("critico!")
+    
+    if precisao != 0:
+        if cos.jogador_atk >= cos.wilson_def:
+            cos.dano_mensagem = str(round(cos.jogador_atk + (cos.jogador_atk*(precisao*2))))
+            cos.wilson_vida_atual -= int(cos.dano_mensagem)
+            cos.dano_cor = 'red'
+            cos.dano_tempo = pygame.time.get_ticks()
+            print(cos.dano_mensagem)
+            mostraTransicao = True
+        else:
+            cos.dano_mensagem = 'bloqueado!'
+            cos.dano_cor = 'gray'
+            cos.dano_tempo = pygame.time.get_ticks()
+            mostraTransicao = True
+
+    else:
+        cos.dano_mensagem = 'Errou!'
+        cos.dano_cor = 'gray'
+        cos.dano_tempo = pygame.time.get_ticks()
+        mostraTransicao = True
+
+
+def mostrarDano():
+    if cos.dano_mensagem:
+        tempo_atual = pygame.time.get_ticks()
+        if tempo_atual - cos.dano_tempo < 1500:  # mostra por 1.5 segundos
+            janela.escreveTexto(cos.dano_mensagem, cos.fonteBatalha, cos.dano_cor, (janela.tela.get_width()/2, janela.tela.get_height()/2 - 150))
+        else:
+            # Limpa a mensagem após o tempo
+            cos.dano_mensagem = None
+        pygame.draw.rect(janela.tela, 'red', ((janela.tela.get_width()/2-150, janela.tela.get_height()/2 - 100), (1*(cos.wilson_vida_max/50), 20)))
+        pygame.draw.rect(janela.tela, 'green', ((janela.tela.get_width()/2-150, janela.tela.get_height()/2 - 100), (1*(cos.wilson_vida_atual/50), 20)))
+
+
                 
 print('inicializando funções...')

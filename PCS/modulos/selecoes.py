@@ -3,6 +3,7 @@ from pygame.locals import *
 import modulos.constantes as cos
 from modulos.janelas import janela
 from modulos.alma import alma
+from modulos.funcoes import ataque_player
 
 pygame.init()
 
@@ -59,7 +60,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             else:
                 self.mostraMsg = True
     def mirar(self, tecla):
-        global tempoAtual
+        global tempoAtual, precisao
         if self.mirando:
             #print('mirar inicia')
             self.alvo = pygame.image.load('assets/sprites/mira.png')
@@ -71,11 +72,12 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             tempoAtual = pygame.time.get_ticks()
             if self.x_mira >= 620 or (tecla == K_z and tempoAtual - self.comecoMira >= 100):
                 self.mirando = False
+                ataque_player(self.x_mira)
                 self.x_mira = 40
                 self.comecaBatalha = True
                 self.impedeTravaPos = False
-                print(self.comecaBatalha)
-                print(self.impedeTravaPos)
+                #print(self.comecaBatalha)
+                #print(self.impedeTravaPos)
         
     #Método que, quando chamado, muda o jogador para a tela de combate. O comecaBatalha (flag) serve para garantir que a função não seja chamada até que a flag seja verdadeira
     def batalhaAcontece(self):
@@ -86,7 +88,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             cos.x = 320
             cos.y = 260
             self.impedeTravaPos = True
-            print('batalha acontece')
+            #print('batalha acontece')
                     
     def confirmaSelecao(self, tecla):
         if self.mostraMsg and tecla == K_z and alma.rect.colliderect(self.gambiarraMsg):
@@ -109,14 +111,14 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         
     def confirmaAgir(self):
         janela.mudarTela('ações')
-        print('poggers')
+        #print('poggers')
         
     def confirmaTelaItem(self):
         janela.mudarTela('inventário')
             
     def confirmaPiedade(self):
         janela.mudarTela('piedade')
-        print('Mas não estava amarelo')
+        #print('Mas não estava amarelo')
         
 botoes = [
     Selecoes(50, "Wilson Tremba"),
