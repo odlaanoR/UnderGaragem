@@ -16,7 +16,7 @@ fases = [
     atk.Gerarataques(atk.rodada3(), 2),
     atk.Gerarataques(atk.rodada4(),),
     atk.Gerarataques(atk.rodada5(),),
-    atk.Gerarataques(atk.rodada6()),
+    atk.Gerarataques(atk.rodada6(), 1),
 ]   
 
 while True:
@@ -66,6 +66,7 @@ while True:
                     botao.cancelaSelecao()
                 cos.x = 65
                 cos.y = 450
+
          
         #Eventos detectados após o jogador selecionar o botão de Agir      
         if evento.type == KEYDOWN and janela.telaAtual == 'ações':
@@ -121,18 +122,33 @@ while True:
                 janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
-                print("fim do ataque")
+                #print("fim do ataque")
                 botao.impedeTravaPos = False
                 botao.comecaBatalha = False
                 cos.fase_atual += 1  
+                if cos.efeito100limite:
+                    cos.vidaAtual = cos.vidaAntes100limite
+                    cos.vidaAntes100limite = None
+                    cos.efeito100limite = False
+                if cos.efeitoVerde:
+                    cos.efeitoVerde = False
 
+
+
+        #eventos de combate
         if evento.type == cos.fimInv:
             alma.acertavel = True
-            print("Iframe off")
+            #print("Iframe off")
+
+        if evento.type == KEYDOWN:
+            if evento.key == K_UP and alma.estado == 1:
+                cos.velocidade_azul = 0
+                #print("velocidade da alma azul zerada!")
             
     #Tela de seleções    
     janela.corFundo()
-    janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(260,385))
+    func.mostrarDano()
+    janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(200,385))
     janela.escreveTexto('Lutar', cos.fonteCustomizada, botoes[0].cor, (85, 433))
     janela.escreveTexto('Agir', cos.fonteCustomizada, botoes[1].cor, (238, 433))
     janela.escreveTexto('Item', cos.fonteCustomizada, botoes[2].cor, (373, 433))
@@ -156,12 +172,12 @@ while True:
                 janela.escreveTexto(cos.dialogos[cos.fase_atual], cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2-20)))        
     
     #vida em barra
-    vida_max_barra = pygame.draw.rect(janela.tela, 'red', (370,395, (1*cos.vida), 20))
-    vida_atual_barra = pygame.draw.rect(janela.tela, 'green', (370,395, (1*cos.vidaAtual), 20))
+    vida_max_barra = pygame.draw.rect(janela.tela, 'red', (330,395, (1*cos.vida), 20))
+    vida_atual_barra = pygame.draw.rect(janela.tela, 'green', (330,395, (1*cos.vidaAtual), 20))
 
     #Desenha as Caixas
     if janela.telaAtual == 'lutaAcontecendo' or janela.telaAtual == 'inventário':
-        janela.desenhaCaixa((70, 190, 500, 180))
+        janela.desenhaCaixa((70, 190, cos.largura_combate, cos.altura_combate))
     else:
         janela.desenhaCaixa((10,180,620,180))
         
@@ -208,16 +224,25 @@ while True:
             cos.x -= 1  * velocidade
             cos.direcao = 'esquerda'
         if teclas[pygame.K_UP] and not alma.rect.colliderect(colisoes[0].rect):
-            cos.y -= 1 * velocidade
+            if alma.estado == 1:
+                cos.y -= 1*cos.velocidade_azul
+                if cos.velocidade_azul >= 0 :
+                    cos.velocidade_azul -= 0.1
+                    #print(cos.velocidade_azul)
+            else:
+                cos.y -= 1 * velocidade
             cos.direcao = 'cima'
         if teclas[pygame.K_DOWN] and not alma.rect.colliderect(colisoes[2].rect):
             cos.y += 1 * velocidade
             cos.direcao = 'baixo'
 
 
-            #checks especificos de outras almas
+        #checks especificos de outras almas
         if alma.rect.colliderect(colisoes[2].rect) and alma.estado == 1:
-            cos.y -= 1
+            cos.y -= 2
+            cos.velocidade_azul = 6.0
+        
+
         
 
 
@@ -226,10 +251,10 @@ while True:
             pygame.time.set_timer(cos.fim_do_ataque, fase.duracao)
             for ataque in fase.ataques:
                 ataque.iniciar()
-            else:
+            if not cos.efeitoVerde:
                 alma.trocaestado(fase.mudaalma)#muda o estado da alma para o declarado como argumento da função gerarataques
             cos.ataque_iniciou = True
-            print("Todos os ataques foram iniciados")
+            #print("Todos os ataques foram iniciados")
 
         for ataque in fase.ataques: #gera os ataques baseado na rodada
             resultado = ataque.atualizar(alma, func.escudo, alma.estado)
@@ -237,7 +262,7 @@ while True:
             if ataque.mostrar:
                 ataque.draw(janela.tela)
             if resultado == "dano" and not ataque.mostrar:
-                cos.vidaAtual -= 10
+                cos.vidaAtual -= (cos.wilson_atk - cos.jogador_def)
                 cos.dano_snd.play()
                 alma.iframe()
                 #print('deu dano')
@@ -245,6 +270,12 @@ while True:
                 cos.parry_snd.play()
                 #print('deu parry')          
                 
+
+
+    #Tela de seleções
+    if janela.telaAtual == 'seleções':
+        cos.efeito100limite = False
+
     #Tela de Agir
     if janela.telaAtual == 'ações':   
         func.printaAcoes()
@@ -290,7 +321,7 @@ while True:
                         
     #Tela de Inventário
     if janela.telaAtual == 'inventário':
-        func.printaItens()
+        func.printaItens(botoes)
         for item in itens:
             item.checaAlma()
             
@@ -346,5 +377,8 @@ while True:
                 elif evento.type == KEYDOWN:
                     if evento.key == K_r:
                         func.reiniciarJogo()
+    
+    if cos.wilson_vida_atual <= 0:
+        print("fim de jogo Genocida painho")
             
     janela.atualizaTela() 
