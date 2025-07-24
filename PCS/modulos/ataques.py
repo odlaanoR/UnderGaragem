@@ -282,5 +282,33 @@ def rodada7():
 
 def rodada8():
     return[
-        
+        ataque('purple',cos.caixa_combate.x, cos.caixa_combate.y, 220, 180, 0, 0, 0),#esses ataques cobrem a esquerda da caixa
+        ataque('purple',cos.caixa_combate.x, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+        ataque('purple',cos.caixa_combate.x, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+        ataque('purple',cos.caixa_combate.x, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+
+        ataque('purple',350, cos.caixa_combate.y, 220, 180, 0, 0, 0),#esses cobrem a direita
+        ataque('purple',350, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+        ataque('purple',350, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+        ataque('purple',350, cos.caixa_combate.y, 220, 180, 0, 0, 0),
+
+        #ataques vindos de cima
+        ataque('yellow', (janela.tela.get_width()/2-25), 0, 20, 20, 0, 1, 1),    
+        ataque('yellow', (janela.tela.get_width()/2+10), 0, 20, 20, 0, 1, 0),    
+    
+        ataque('yellow', (janela.tela.get_width()/2-25), 0, 20, 20, 0, 1, 3),    
+        ataque('yellow', (janela.tela.get_width()/2+10), 0, 20, 20, 0, 1, 4),    
+
+
+        #ataques laterais
+        ataque('white', (janela.tela.get_width()), (janela.tela.get_height()/2 - 10), 20, 20, -2, 0, 3),
+        ataque('white', (janela.tela.get_width()), (janela.tela.get_height()/2 - 30), 20, 20, -2, 0, 3),
+        ataque('white', (janela.tela.get_width()), (janela.tela.get_height()/2 + 70), 20, 20, -2, 0, 3),
+        ataque('white', (janela.tela.get_width()), (janela.tela.get_height()/2 + 90), 20, 30, -2, 0, 3),
+
+        #ataque lateral central
+        ataque('white', 1, (janela.tela.get_height()/2 + 30), 20, 20, 5, 0, 2),
+        ataque('white', 1, (janela.tela.get_height()/2 + 10), 20, 20, 5, 0, 2),
+        ataque('white', 1, (janela.tela.get_height()/2 + 50), 20, 20, 5, 0, 2),
+
     ]
