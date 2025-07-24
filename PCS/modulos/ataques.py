@@ -253,5 +253,34 @@ def rodada6():
 
 def rodada7():
     return[
-        ataque('white', 0, (janela.tela.get_height()/2 + 20), 20, 20, 5, 0, 1),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 0), #esses vem da lateral
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 2.5),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 5),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 6),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 2.75),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 1.75),
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 4.5),
+
+        ataque('yellow', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -1, 0, 2), #esse e os três abaixo vem da direita para a esquerda
+        ataque('yellow', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -1, 0, 5.5), 
+        ataque('yellow', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -1, 0, 4), 
+
+
+        ataque('yellow', (janela.tela.get_width()/2), 0, 20, 20, 0, 1, 1), #esses de cima/baixo
+        ataque('yellow', (janela.tela.get_width()/2), 0, 20, 20, 0, 1, 3.5),
+        ataque('yellow', (janela.tela.get_width()/2), 0, 20, 20, 0, 1, 4.75),
+        ataque('yellow', (janela.tela.get_width()/2), 0, 20, 20, 0, 1, 6),
+
+
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -1, 2),#esse e os dois abaixos vem de baixo
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -1, 1.5),
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -1, 5.75),
+
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -1, 5),
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -1, 0.5),
+    ]
+
+def rodada8():
+    return[
+        
     ]
