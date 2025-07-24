@@ -10,7 +10,6 @@ x = 65
 y = 450
 transicaoTempo = 0
 mostraTransicao = False
-
 fps = pygame.time.Clock()
 vida = 92
 vidaAtual = 70
@@ -32,29 +31,28 @@ wilson_vida_max = 14000
 wilson_vida_atual = 14000
 
 
-largura_combate = 500
-altura_combate = 180
+caixa_combate = pygame.Rect(70, 190, 500, 180)
 
 dano_mensagem = None
 dano_cor = None
 dano_tempo = 0
 
-
-#Efeitos dos Itens
+#definições de itens
 efeito100limite = False
 vidaAntes100limite = False
 efeitoVerde = False
 efeitoMcInfeliz = False
-
-
+consumiuItem = False
 
 #Contador de Ações
 usouConversar = 0
 usouVasculhar = 0
+acaoSelecionada = None
+usouAcao = False
 
 #Fontes
 fonte = pygame.font.SysFont('arial', 30, True, False)
-fonteCustomizada = pygame.font.SysFont('timesnewroman', 23)
+fonteCustomizada = pygame.font.Font('assets/fonte2.ttf', 23)
 fonteBatalha = pygame.font.SysFont('comicsans', 20, True, False)
 pygame.display.set_caption('Undergaragem')
 
@@ -66,7 +64,7 @@ pygame.display.set_icon(icon)
 
 #Sons/Músicas
 musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
-pygame.mixer.music.set_volume(0.45)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play(-1)
 dano_snd = pygame.mixer.Sound('assets/sounds/dano.mp3')
 parry_snd = pygame.mixer.Sound('assets/sounds/parry.mp3')
@@ -81,7 +79,8 @@ dialogos = (
     ("*Sr. Tremba mexeu no seu relógio", "o tempo parece se alterar levemente"),
     "C o n t i n u e  a t a c a n d o",
     "*O ar estrala de puro terror",
-    "*Estrelas caem ao seu redor"
+    "*Estrelas caem ao seu redor",
+    "*Você escuta uma notificação de email ao longe"
 )
 
 
