@@ -49,7 +49,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             if self.mensagem == 'Item':
                 global x, y
                 cos.x = 155
-                cos.y = 220
+                cos.y = 265
                 janela.mudarTela('inventário')
                 self.mostraMsg = False
             elif self.mensagem == 'Checar':
@@ -74,8 +74,8 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
                 self.mirando = False
                 ataque_player(self.x_mira)
                 self.x_mira = 40
-                self.comecaBatalha = True
-                self.impedeTravaPos = False
+                '''self.comecaBatalha = True
+                self.impedeTravaPos = False'''
                 #print(self.comecaBatalha)
                 #print(self.impedeTravaPos)
         
@@ -118,6 +118,8 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def confirmaPiedade(self):
         janela.mudarTela('piedade')
+        cos.x = 320
+        cos.y = 260
         #print('Mas não estava amarelo')
         
 botoes = [
