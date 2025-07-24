@@ -14,6 +14,7 @@ escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciarJogo():
     global vidaAtual, vida, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases, eventos, usouConversar, usouVasculhar
+    print('reiniciando jogo')
     cos.vidaAtual = 70
     cos.vida = 92
     cos.x = 65
@@ -29,21 +30,24 @@ def reiniciarJogo():
     pygame.mixer.music.play(-1)
     janela.mudarTela('seleções')
     itens = [
-        Item('Bolo de Sushi', 'Você recupera 30 de vida'),
-        Item('Cuscuz Paulista','brutal'),
-        Item('Comida3','sla3'),
-        Item('Comida4','sla4'),
-        Item('Comida5','sla5'),
-        Item('Comida6','sla6'),
-        Item('Comida7','sla7'),
-        Item('Comida8','sla8'),
-        Item('Comida9','sla9'),
+        Item('Bolo de Sushi', 'Você recupera 40 de vida'),
+        Item('Cuscuz Paulista','NAOOOOOOOOOOOOOOOOOOOOOOO'),
+        Item('Sopa do Infinito','Você sente como se todas as coisas estivessem equilibradas'),
+        Item('100 limite','Você se sente ilimitado (por uma rodada)'),
+        Item('Verde','+10 HP Você está verde???????'),
+        Item('BiGaragem','Você recupera 50 de vida'),
+        Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF, +ATK'),
+        Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!'),
+        Item('O revólver que matou "Felipe"', 'Você equipou essa coisa, você escuta gritos ao seu redor')
     ]
-    print('reiniciando jogo')
     fases = [
         atk.Gerarataques(atk.rodada1(), 10),
         atk.Gerarataques(atk.rodada2(), 10),
-        atk.Gerarataques(atk.rodada3(), 10)
+        atk.Gerarataques(atk.rodada3(), 2),
+        atk.Gerarataques(atk.rodada4(),),
+        atk.Gerarataques(atk.rodada5(),),
+        atk.Gerarataques(atk.rodada6(), 1),
+        atk.Gerarataques(atk.rodada7(), 2)
     ]
     alma.acertavel = True
     for evento in eventos:
@@ -101,34 +105,34 @@ def printaAcoes():
             
 #Se o jogador estiver na tela do inventário e confirmar a ação (clicando no Z) estando em colisao com qualquer item, ele será redirecionado para a tela que confirma qual item ele usou e o efeito que ele faz.
 def consomeItem(tecla):
-    global itemSelecionado, consumiuItem, mostraTransicao, transicaoTempo
+    global itemSelecionado
     itemSelecionado = None
-    consumiuItem = False
     if janela.telaAtual == 'inventário' and tecla == K_z:
         for item in itens:
             if alma.rect.colliderect(item.colisao):
                 itemSelecionado = item
                 janela.mudarTela('transiçãoItens')
-                transicaoTempo = pygame.time.get_ticks()
-                mostraTransicao = True
+                cos.x = 320
+                cos.y = 260
+                cos.transicaoTempo = pygame.time.get_ticks()
+                cos.mostraTransicao = True
                 cos.clica_som.set_volume(0.4)
                 cos.clica_som.play()
             
 def escolheAcao(tecla):
-    global acaoSelecionada, usouAcao, mostraTransicao, transicaoTempo
-    acaoSelecionada = None
-    usouAcao = False
     if janela.telaAtual == 'ações' and tecla == K_z:
         for acao in act.acoes:
             if alma.rect.colliderect(acao.colisao):
-                acaoSelecionada = acao
+                cos.acaoSelecionada = acao
                 if acao.nome == 'Conversar':
                     cos.usouConversar += 1
                 elif acao.nome == 'Vasculhar':
                     cos.usouVasculhar += 1       
                 janela.mudarTela('transiçãoAções')
-                transicaoTempo = pygame.time.get_ticks()
-                mostraTransicao = True
+                cos.x = 320
+                cos.y = 260
+                cos.transicaoTempo = pygame.time.get_ticks()
+                cos.mostraTransicao = True
                 cos.clica_som.set_volume(0.4)
                 cos.clica_som.play()   
 def verde():
@@ -147,7 +151,7 @@ def verde():
         return escudo
     
 def ataque_player(mira):
-
+    usouMira()
     if mira < 300:
         precisao = mira/300
         print(precisao)
@@ -165,19 +169,14 @@ def ataque_player(mira):
             cos.dano_cor = 'red'
             cos.dano_tempo = pygame.time.get_ticks()
             print(cos.dano_mensagem)
-            mostraTransicao = True
         else:
             cos.dano_mensagem = 'bloqueado!'
             cos.dano_cor = 'gray'
             cos.dano_tempo = pygame.time.get_ticks()
-            mostraTransicao = True
-
     else:
         cos.dano_mensagem = 'Errou!'
         cos.dano_cor = 'gray'
         cos.dano_tempo = pygame.time.get_ticks()
-        mostraTransicao = True
-
 
 def mostrarDano():
     if cos.dano_mensagem:
@@ -190,6 +189,12 @@ def mostrarDano():
         pygame.draw.rect(janela.tela, 'red', ((janela.tela.get_width()/2-150, janela.tela.get_height()/2 - 100), (1*(cos.wilson_vida_max/50), 20)))
         pygame.draw.rect(janela.tela, 'green', ((janela.tela.get_width()/2-150, janela.tela.get_height()/2 - 100), (1*(cos.wilson_vida_atual/50), 20)))
 
+def usouMira():
+    janela.mudarTela('transiçãoMira')
+    cos.x = 320
+    cos.y = 260
+    cos.mostraTransicao = True
+    cos.transicaoTempo = pygame.time.get_ticks()
 
                 
 print('inicializando funções...')
