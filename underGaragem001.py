@@ -17,6 +17,8 @@ fases = [
     atk.Gerarataques(atk.rodada4(),),
     atk.Gerarataques(atk.rodada5(),),
     atk.Gerarataques(atk.rodada6(), 1),
+    atk.Gerarataques(atk.rodada7(), 2),
+    atk.Gerarataques(atk.rodada8(),)
 ]   
 
 while True:
@@ -71,7 +73,7 @@ while True:
         #Eventos detectados após o jogador selecionar o botão de Agir      
         if evento.type == KEYDOWN and janela.telaAtual == 'ações':
             if evento.key == K_RIGHT:
-                if alma.rect.colliderect(act.acoes[0].colisao) or alma.rect.colliderect(act.acoes[1].colisao):
+                if alma.rect.colliderect(act.acoes[0].colisao) or alma.rect.colliderect(act.acoes[1].colisao): 
                     cos.x += 200
             if evento.key == K_LEFT:
                 if alma.rect.colliderect(act.acoes[2].colisao) or alma.rect.colliderect(act.acoes[3].colisao):
@@ -108,7 +110,7 @@ while True:
                              
         if evento.type == KEYDOWN and janela.telaAtual == 'piedade':
             if evento.key == K_z:
-                func.mostraTransicao = True
+                cos.mostraTransicao = True
                 func.transicaoTempo = pygame.time.get_ticks()
                 
         if evento.type == QUIT:
@@ -132,9 +134,6 @@ while True:
                     cos.efeito100limite = False
                 if cos.efeitoVerde:
                     cos.efeitoVerde = False
-
-
-
         #eventos de combate
         if evento.type == cos.fimInv:
             alma.acertavel = True
@@ -154,7 +153,6 @@ while True:
     janela.escreveTexto('Item', cos.fonteCustomizada, botoes[2].cor, (373, 433))
     janela.escreveTexto('Poupar', cos.fonteCustomizada, botoes[3].cor, (495, 433))
     
-
     #textos
     dialogo_atual = cos.dialogos[cos.fase_atual]
     if janela.telaAtual == 'seleções':
@@ -177,7 +175,7 @@ while True:
 
     #Desenha as Caixas
     if janela.telaAtual == 'lutaAcontecendo' or janela.telaAtual == 'inventário':
-        janela.desenhaCaixa((70, 190, cos.largura_combate, cos.altura_combate))
+        janela.desenhaCaixa(cos.caixa_combate)
     else:
         janela.desenhaCaixa((10,180,620,180))
         
@@ -236,15 +234,10 @@ while True:
             cos.y += 1 * velocidade
             cos.direcao = 'baixo'
 
-
         #checks especificos de outras almas
         if alma.rect.colliderect(colisoes[2].rect) and alma.estado == 1:
             cos.y -= 2
             cos.velocidade_azul = 6.0
-        
-
-        
-
 
         fase = fases[cos.fase_atual]#declara a fase atual
         if not cos.ataque_iniciou: #criado para os temporizados funcionarem de maneira apropriada
@@ -263,15 +256,15 @@ while True:
                 ataque.draw(janela.tela)
             if resultado == "dano" and not ataque.mostrar:
                 cos.vidaAtual -= (cos.wilson_atk - cos.jogador_def)
+                cos.dano_snd.set_volume(0.3)
                 cos.dano_snd.play()
                 alma.iframe()
                 #print('deu dano')
             elif resultado == "parry" and not ataque.mostrar:
+                cos.parry_snd.set_volume(0.3)
                 cos.parry_snd.play()
                 #print('deu parry')          
-                
-
-
+            
     #Tela de seleções
     if janela.telaAtual == 'seleções':
         cos.efeito100limite = False
@@ -284,7 +277,7 @@ while True:
                 
     #Na tela de ações,            
     if janela.telaAtual == 'transiçãoAções':
-        acao = func.acaoSelecionada
+        acao = cos.acaoSelecionada
         if acao.nome == 'Conversar':
             if cos.usouConversar == 1:
                 textoEfeito = 'Você tenta dialogar com o Wilson Tremba...'
@@ -312,10 +305,10 @@ while True:
         janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (50,220))  
         janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (50,250))
               
-        if func.mostraTransicao:
+        if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
-            if tempoAtual - func.transicaoTempo > 2000:
-                mostraTransicao = False
+            if tempoAtual - cos.transicaoTempo > 2000:
+                cos.mostraTransicao = False
                 botoes[0].comecaBatalha = True
                 cos.ataque_iniciou = False
                         
@@ -329,26 +322,33 @@ while True:
         janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
         janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260)) 
          
-        if not func.consumiuItem:
+        if not cos.consumiuItem:
             func.itemSelecionado.usar()
-            func.consumiuItem = True
-        if func.mostraTransicao:
+            cos.consumiuItem = True
+        if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
-            if tempoAtual - func.transicaoTempo > 2000:
-                mostraTransicao = False
+            if tempoAtual - cos.transicaoTempo > 2000:
+                cos.mostraTransicao = False
                 botoes[0].comecaBatalha = True
                 cos.ataque_iniciou = False
     
     #Tela de Piedade
     if janela.telaAtual == 'piedade':
         janela.escreveTexto('Mas não estava amarelo', cos.fonteBatalha, (255,255,255), (40,210))
-        if func.mostraTransicao:
+        if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
             if tempoAtual - func.transicaoTempo > 2000:
                 mostraTransicao = False
                 botoes[0].comecaBatalha = True
                 cos.ataque_iniciou = False
                 
+    if janela.telaAtual == 'transiçãoMira':
+        if cos.mostraTransicao:
+            tempoAtual = pygame.time.get_ticks()
+            if tempoAtual - cos.transicaoTempo > 1500:
+                cos.mostraTransicao = False
+                botoes[0].comecaBatalha = True
+                cos.ataque_iniciou = False
                 
     #Tela de Gameover. Nessa tela toda a movimentação e interação do jogador é limitada ao jogador chegar a 0 de vida (exceto pela tecla R que reinicia o jogo).
     if cos.vidaAtual <= 0:
