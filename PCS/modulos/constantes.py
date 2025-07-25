@@ -21,6 +21,8 @@ ataque_iniciou = False
 fim_do_ataque = pygame.event.custom_type()
 fimInv = pygame.event.custom_type()
 fase_atual = 0
+dialogo_atual = 0
+ataques_acabaram = False #só se torna True quando todos os ataques criados acabam
 tempoInv = 900
 velocidade_azul = 6.0
 jogador_def = 0
@@ -76,7 +78,7 @@ cura_som = pygame.mixer.Sound('PCS/assets/sounds/snd_heal.wav')
 dialogos = (
     "*Aqui acabou",
     "*Quem é esse cara?",
-    "*Você sente uma pressão espiritual lhe sufocar",
+    ("*Você olha ao seu redor, diversas caixas e coisas estão próximas", "Use VASCULHAR para procurar por algo útil"),
     ("*Sr. Tremba mexeu no seu relógio", "o tempo parece se alterar levemente"),
     "C o n t i n u e  a t a c a n d o",
     "*O ar estrala de puro terror",
@@ -88,7 +90,7 @@ dialogos = (
     "*Panelas batem em algum lugar a sua direita",
     "*Você escuta uma moto cortando um giro em outra realidade",
     "*ratos fazem barulho ao seu redor",
-    "*"
+    ("*Alguém está batendo gravetos na caixa registradora" , "por algum motivo, tem cheiro de água sanitária"),
 )
 
 
