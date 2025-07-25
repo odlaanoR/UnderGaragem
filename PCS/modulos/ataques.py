@@ -3,7 +3,7 @@ from modulos.janelas import *
 import modulos.constantes as cos
 
 class ataque():
-    def __init__(self, cor, ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, delay):
+    def __init__(self, cor, ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, delay, respawn=True):
         self.retangulo = pygame.Rect(ataque_x, ataque_y, ataque_w, ataque_h)
         self.y = ataque_y
         self.x = ataque_x
@@ -16,6 +16,7 @@ class ataque():
         self.ataque = False
         self.tempoInicio = 0
         self.ativado = False
+        self.respawn = respawn
     
     def iniciar(self):
         self.tempoInicio = pygame.time.get_ticks()
@@ -36,10 +37,16 @@ class ataque():
         if self.mostrar:
             self.retangulo.x += self.mov_x
             self.retangulo.y += self.mov_y
-            if self.retangulo.x >= janela.tela.get_width() or self.retangulo.x < 0:
-                self.retangulo.x = self.x
-            if self.retangulo.y >= janela.tela.get_height() or self.retangulo.y < 0:
-                self.retangulo.y = self.y
+            if self.respawn:
+                if self.retangulo.x >= janela.tela.get_width() or self.retangulo.x < 0:
+                    self.retangulo.x = self.x
+                if self.retangulo.y >= janela.tela.get_height() or self.retangulo.y < 0:
+                    self.retangulo.y = self.y
+            else:
+                if self.retangulo.x >= janela.tela.get_width() or self.retangulo.x < 0:
+                    self.mostrar = False
+                if self.retangulo.y >= janela.tela.get_height() or self.retangulo.y < 0:
+                    self.mostrar = False              
             if self.retangulo.colliderect(alma) and alma.acertavel:
                 #print("colidiu!")
                 self.mostrar = False
@@ -199,7 +206,7 @@ def rodada5():
         ataque('white', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, 2, 0),
     ]
 '''
-def rodada6():
+def rodada6(): #ataque azul 1
     return[
         ataque('blue', 80, 0, 20, 20, 0, 3, 0),
         ataque('blue', 100, 0, 20, 20, 0, 3, 0),
@@ -251,7 +258,7 @@ def rodada6():
         ataque('white', 0, (janela.tela.get_height()/2 + 20), 20, 20, 5, 0, 5),
     ]
 
-def rodada7():
+def rodada7():#ataque verde 2
     return[
         ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 0), #esses vem da lateral
         ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 1, 0, 2.5),
@@ -312,3 +319,171 @@ def rodada8():
         ataque('white', 1, (janela.tela.get_height()/2 + 50), 20, 20, 5, 0, 2),
 
     ]
+
+def rodada9():#ataque verde 3
+    return[
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 1),#direita - esquerda
+        ataque('yellow', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 1.8),
+        ataque('orange', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 4),
+        ataque('orange', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 5.2),
+        ataque('firebrick', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 6),
+        ataque('firebrick', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 6.6),
+        ataque('firebrick', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 7.2),
+        ataque('firebrick', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 7.8),
+        ataque('red', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 10.3),
+        ataque('red', 0, (janela.tela.get_height()/2), 20, 20, 10, 0, 11.5),
+
+
+        ataque('yellow', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 2),#esquerda - direita
+        ataque('orange', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 4.3),
+        ataque('firebrick', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 6.3),
+        ataque('firebrick', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 6.9),
+        ataque('firebrick', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 7.5),
+        ataque('red', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 10.9),
+        ataque('red', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 11.7),
+        ataque('red', (janela.tela.get_width()), (janela.tela.get_height()/2), 20, 20, -10, 0, 12.3),
+
+
+        ataque('yellow', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 3),#cima - baixo
+        ataque('orange', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 4.6),
+        ataque('firebrick', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 8),
+        ataque('firebrick', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 8.6),
+        ataque('red', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 10),
+        ataque('red', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 11.2),
+        ataque('red', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 12.5),
+        ataque('crimson', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 14.7),
+        ataque('crimson', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 14.9),
+        ataque('crimson', (janela.tela.get_width()/2), 0, 20, 20, 0, 10, 15.1),
+
+
+        ataque('yellow', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 2.2),#baixo - cima
+        ataque('orange', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 4.9),
+        ataque('firebrick', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 8.3),
+        ataque('red', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 10.6),
+        ataque('red', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 12),
+        ataque('crimson', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 14),
+        ataque('crimson', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 14.2),
+        ataque('crimson', (janela.tela.get_width()/2), (janela.tela.get_height()), 20, 20, 0, -10, 14.4),
+    ]
+
+'''def rodada10():
+    return[
+        ataque('purple',0, cos.caixa_combate.y, 220, 80, 1, 0, 0),#esses ataques cobrem a esquerda da caixa
+        ataque('purple',0, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',0, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',0, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+
+        ataque('purple',cos.caixa_combate.x-80, cos.caixa_combate.y, 220, 80, 1, 0, 0),#esses ataques cobrem a esquerda inferior da caixa
+        ataque('purple',cos.caixa_combate.x-80, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',cos.caixa_combate.x-80, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',cos.caixa_combate.x-80, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+
+        ataque('purple',350, cos.caixa_combate.y, 220, 80, 1, 0, 0),#esses cobrem a direita
+        ataque('purple',350, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',350, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+        ataque('purple',350, cos.caixa_combate.y, 220, 80, 1, 0, 0),
+    ]
+'''
+def rodada10():
+    return[
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 0),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 0.5),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 1),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 1.5),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 2),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 2.5),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 3),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 3.5),
+        ataque('white', 0, cos.caixa_combate.y, 20, cos.caixa_combate.h/2, 2, 0, 4),
+
+
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 0),#parte de baixo
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 0.5),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 1),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 1.5),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 2),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 2.5),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 3),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 3.5),
+        ataque('white', (cos.caixa_combate.w+cos.caixa_combate.x), (cos.caixa_combate.y+cos.caixa_combate.h/2), 20, cos.caixa_combate.h/2, -2, 0, 4),
+
+    ]
+
+def rodada11():#ataque alma azul 2
+    return[
+        ataque('white', 0, (janela.tela.get_height()/2 + 100), 220, 20, 5, 0, 1),#ataques do chão
+        ataque('white', 0, (janela.tela.get_height()/2 + 100), 220, 20, 5, 0, 1),
+        ataque('white', 0, (janela.tela.get_height()/2 + 100), 220, 20, 5, 0, 1),
+        ataque('white', 0, (janela.tela.get_height()/2 + 100), 220, 20, 5, 0, 1),
+        ataque('white', 0, (janela.tela.get_height()/2 + 100), 220, 20, 5, 0, 1),
+
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, .5),#ataques superiores
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 1),
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 1.5),
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 2),
+
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, .5),
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 1),
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 1.5),
+        ataque('white', 0, (janela.tela.get_height()/2 + 50), 60, 20, 5, 0, 2),
+
+        ataque('white', janela.tela.get_width()/2, (janela.tela.get_height()/2 -100), 20, 60, 0, 3, 1),#ataques vertical
+        ataque('white', janela.tela.get_width()/2, (janela.tela.get_height()/2 -100), 20, 60, 0, 3, 3),
+    ]
+
+def rodada12():
+    return[
+        ataque('brown', (cos.caixa_combate.x), 0, 120, 180, 0, 1, 1, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-120), 0, 120, 180, 0, 1, 1, False),
+
+        ataque('brown', ((cos.caixa_combate.x)+120), 0, 120, 180, 0, 1, 7, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-240), 0, 120, 180, 0, 1, 7, False),
+
+        ataque('brown', (cos.caixa_combate.x), 0, (cos.caixa_combate.width), (cos.caixa_combate.h), 0, 1, 14, False),
+
+
+        ataque('gray', 0,(janela.tela.get_height()/2 + 50), 20, 20, 3, 0, 1, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 + 90), 20, 20, 3, 0, 0.5, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 ), 20, 20, 3, 0, 2, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 -30), 20, 20, 3, 0, 3, ),
+
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 + 30), 20, 20, -3, 0, 1, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 + 70), 20, 20, -3, 0, 0.5, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 -50), 20, 20, -3, 0, 2, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 -10), 20, 20, -3, 0, 3, ),
+    ]
+
+def rodada13():
+        return[
+
+        ataque('brown', (cos.caixa_combate.x), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', (cos.caixa_combate.x), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', (cos.caixa_combate.x), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+
+        ataque('brown', ((cos.caixa_combate.x)+120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-240), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x)+120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-240), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x)+120), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+        ataque('brown', ((cos.caixa_combate.x + cos.caixa_combate.w)-240), (cos.caixa_combate.y), 120, 180, 0, 0, 0, False),
+
+
+        ataque('gray', 0,(janela.tela.get_height()/2 + 50), 20, 20, 3, 0, 1, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 + 90), 20, 20, 3, 0, 0.5, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 ), 20, 20, 3, 0, 2, ),
+        ataque('gray', 0,(janela.tela.get_height()/2 -30), 20, 20, 3, 0, 3, ),
+
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 + 30), 20, 20, -3, 0, 1, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 + 70), 20, 20, -3, 0, 0.5, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 -50), 20, 20, -3, 0, 2, ),
+        ataque('gray', (janela.tela.get_width()),(janela.tela.get_height()/2 -10), 20, 20, -3, 0, 3, ),
+
+        ataque('blue', 0, 100, 20, 20, 2, 2, 0),
+
+        ataque('blue', (janela.tela.get_width()), 100, 20, 20, -2, 2, 1),
+        
+        
+        ]
