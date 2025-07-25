@@ -24,7 +24,7 @@ fase_atual = 0
 dialogo_atual = 0
 ataques_acabaram = False #só se torna True quando todos os ataques criados acabam
 tempoInv = 900
-velocidade_azul = 6.0
+
 jogador_def = 0
 jogador_atk = 1
 
@@ -65,6 +65,8 @@ gameoverImg = pygame.transform.scale(gameoverImg, (600, 300))
 icon = pygame.image.load('PCS/assets/sprites/alma.png')
 pygame.display.set_icon(icon)
 
+WilsonIddle = pygame.image.load('PCS/assets/sprites/Wilsoniddle.png')
+
 #Sons/Músicas
 musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
 pygame.mixer.music.set_volume(0.1)
@@ -78,9 +80,9 @@ cura_som = pygame.mixer.Sound('PCS/assets/sounds/snd_heal.wav')
 dialogos = (
     "*Aqui acabou",
     "*Quem é esse cara?",
-    ("*Você olha ao seu redor, diversas caixas e coisas estão próximas", "Use VASCULHAR para procurar por algo útil"),
+    ("*diversas caixas e coisas estão próximas", "Use VASCULHAR para procurar por algo útil ao seu redor"),
+    ("*Wilson Tremba parece tão confuso quanto você", "talvez CONVERSAR possa torna-lo amistoso?"),
     ("*Sr. Tremba mexeu no seu relógio", "o tempo parece se alterar levemente"),
-    "C o n t i n u e  a t a c a n d o",
     "*O ar estrala de puro terror",
     "*Caminhões tombam ao seu redor",
     "*Você escuta uma notificação de email ao longe",

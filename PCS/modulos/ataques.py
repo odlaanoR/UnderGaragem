@@ -68,11 +68,6 @@ class ataque():
         self.retangulo.x = self.x_inicial
         self.retangulo.y = self.y_inicial
 
-def reseta_rodada(fase):
-    for ataque in fase.ataques:
-        ataque.resetar()
-        #print('ataque resetado')
-
 
 
 
@@ -507,3 +502,24 @@ def rodada13():
         
         
         ]
+
+
+
+
+
+
+fases = [#0 = alma vermelha; 1 = alma azul; 2 = alma verde
+    Gerarataques(rodada1(),),
+    Gerarataques(rodada2(),),
+    Gerarataques(rodada3(), 2),
+    Gerarataques(rodada4(),),
+    Gerarataques(rodada5(),),
+    Gerarataques(rodada6(), 1),
+    Gerarataques(rodada7(), 2),
+    Gerarataques(rodada8(), 0, 15),
+    Gerarataques(rodada9(), 2, 20),
+    Gerarataques(rodada10(), 0,),
+    Gerarataques(rodada11(), 1, ),
+    Gerarataques(rodada12(), 0, 16),
+    Gerarataques(rodada13(), 0)
+]   

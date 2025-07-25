@@ -32,7 +32,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         if alma.rect.colliderect(self.botao):
             self.cor = self.novaCor
             if self.passou:
-                passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
+                passaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_squeak.mp3')
                 passaAcao.set_volume(0.3)
                 passaAcao.play()
                 self.passou = False   
@@ -42,7 +42,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def checaClique(self, tecla):
         if tecla == K_z and alma.rect.colliderect(self.botao):
-            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
+            clicaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_select.mp3')
             clicaAcao.set_volume(0.4)
             clicaAcao.play()
             self.gambiarraMsg = pygame.Rect(30, 215, 10, 10)
@@ -63,7 +63,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         global tempoAtual, precisao
         if self.mirando:
             #print('mirar inicia')
-            self.alvo = pygame.image.load('assets/sprites/mira.png')
+            self.alvo = pygame.image.load('PCS/assets/sprites/mira.png')
             self.alvo = pygame.transform.scale(self.alvo, (600, 135))
             janela.tela.blit(self.alvo, (20, 205))
             self.x_mira += 5.6

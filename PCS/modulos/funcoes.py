@@ -9,58 +9,43 @@ import modulos.ataques as atk
 from modulos.ataques import *
 import modulos.constantes as cos
 
+
+
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
 
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciarJogo():
-    global vidaAtual, vida, gameover, x, y, musicaFundo, itens, fase_atual, ataque_iniciou, fases, eventos, usouConversar, usouVasculhar
+
     print('reiniciando jogo')
-    cos.vidaAtual = 70
-    cos.vida = 92
-    cos.x = 65
-    cos.y = 450
-    gameover = False
-    eventos = pygame.event.get()
-    cos.fase_atual = 0
-    cos.ataque_iniciou = False
+
+
+    pygame.event.clear()
+    reseta_itens()
+    reseta_ataques()
+    reseta_jogador()
+    reseta_botoes()
+
+
+    cos.dialogo_atual = 0
     cos.usouConversar = 0
     cos.usouVasculhar = 0
-    musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
+    cos.mostraTransicao = False
+    cos.acaoSelecionada = None
+    cos.usouAcao = False
+
+    cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
     pygame.mixer.music.set_volume(0.45)
     pygame.mixer.music.play(-1)
+
+
     janela.mudarTela('seleções')
-    itens = [
-        Item('Bolo de Sushi', 'Você recupera 40 de vida'),
-        Item('Cuscuz Paulista','NAOOOOOOOOOOOOOOOOOOOOOOO'),
-        Item('Sopa do Infinito','Você sente como se todas as coisas estivessem equilibradas'),
-        Item('100 limite','Você se sente ilimitado (por uma rodada)'),
-        Item('Verde','+10 HP Você está verde???????'),
-        Item('BiGaragem','Você recupera 50 de vida'),
-        Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF, +ATK'),
-        Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!'),
-        Item('O revólver que matou "Felipe"', 'Você equipou essa coisa, você escuta gritos ao seu redor')
-    ]
-    fases = [
-        atk.Gerarataques(atk.rodada1(), 10),
-        atk.Gerarataques(atk.rodada2(), 10),
-        atk.Gerarataques(atk.rodada3(), 2),
-        atk.Gerarataques(atk.rodada4(),),
-        atk.Gerarataques(atk.rodada5(),),
-        atk.Gerarataques(atk.rodada6(), 1),
-        atk.Gerarataques(atk.rodada7(), 2)
-    ]
-    alma.acertavel = True
-    for evento in eventos:
-        for botao in botoes:      
-            if evento.type == cos.fim_do_ataque and janela.telaAtual == 'lutaAcontecendo':#Encerra o turno de ataque inimigo
-                ataque.mostrar = True
-                janela.mudarTela('seleções')
-                cos.x = 65
-                cos.y = 450
-                #print("fim do ataque")
-                botao.impedeTravaPos = False
-                botao.comecaBatalha = False
-                cos.fase_atual += 1  
+
+
+
+
+
+
+
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens(botoes):
     iy = 0
@@ -152,11 +137,11 @@ def verde():
     
 def ataque_player(mira):
     usouMira()
-    if mira < 300:
-        precisao = mira/300
+    if mira < 319:
+        precisao = mira/320
         print(precisao)
-    elif mira > 300:
-        precisao = max(0, 1 - (mira - 300)/300)
+    elif mira > 321:
+        precisao = max(0, 1 - (mira - 320)/320)
         print(precisao)
     else:
         precisao = 1.5
@@ -196,5 +181,76 @@ def usouMira():
     cos.mostraTransicao = True
     cos.transicaoTempo = pygame.time.get_ticks()
 
-                
+def reseta_rodada(fase):
+    for ataque in fase.ataques:
+        ataque.resetar()
+        #print('ataque resetado')
+
+#Funções para resetar todas as coisas
+
+def reseta_ataques():
+    atk.fases = [#0 = alma vermelha; 1 = alma azul; 2 = alma verde
+        atk.Gerarataques(atk.rodada1(),),
+        atk.Gerarataques(atk.rodada2(),),
+        atk.Gerarataques(atk.rodada3(), 2),
+        atk.Gerarataques(atk.rodada4(),),
+        atk.Gerarataques(atk.rodada5(),),
+        atk.Gerarataques(atk.rodada6(), 1),
+        atk.Gerarataques(atk.rodada7(), 2),
+        atk.Gerarataques(atk.rodada8(), 0, 15),
+        atk.Gerarataques(atk.rodada9(), 2, 20),
+        atk.Gerarataques(atk.rodada10(), 0,),
+        atk.Gerarataques(atk.rodada11(), 1, ),
+        atk.Gerarataques(atk.rodada12(), 0, 16),
+        atk.Gerarataques(atk.rodada13(), 0)
+    ]   
+    for fase in atk.fases:
+        reseta_rodada(fase)
+        
+    cos.fase_atual = 0
+    cos.ataque_iniciou = False
+    cos.ataques_acabaram = False
+
+
+def reseta_jogador():
+    cos.vidaAtual = 70
+    cos.wilson_vida_atual = 14000
+
+    alma.acertavel = True
+    alma.estado = 0
+
+    cos.x = 65
+    cos.y = 450
+
+
+def reseta_itens():
+    global itens
+    itens = [
+        Item('Bolo de Sushi', 'Você recupera 40 de vida'),
+        Item('Cuscuz Paulista','NAOOOOOOOOOOOOOOOOOOOOOOO'),
+        Item('Sopa do Infinito','Você sente como se todas as coisas estivessem equilibradas'),
+        Item('100 limite','Você se sente ilimitado (por uma rodada)'),
+        Item('Verde','+10 HP Você está verde???????'),
+        Item('BiGaragem','Você recupera 50 de vida'),
+        Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF, +ATK'),
+        Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!'),
+        Item('O revólver que matou "Felipe"', 'Você equipou essa coisa, você escuta gritos ao seu redor')
+    ]
+
+    cos.consumiuItem = False
+    cos.efeitoVerde = False
+    cos.efeito100limite = False
+
+def reseta_botoes():
+    from modulos.selecoes import botoes
+    for botao in botoes:
+        botao.comecaBatalha = False
+        botao.impedeTravaPos = False
+        botao.mirando = False
+        botao.mostraMsg = False
+        botao.passou = False
+        botao.gambiarraMsg = pygame.Rect((0,0,0,0))
+        botao.x_mira = 40
+
+
 print('inicializando funções...')
