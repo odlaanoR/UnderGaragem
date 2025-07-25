@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from modulos.alma import alma
+from modulos.alma import wilson_sprite
 from modulos.janelas import *
 from modulos.selecoes import *
 from modulos.item import *
@@ -10,21 +11,6 @@ import modulos.constantes as cos
 import modulos.acoes as act
 from sys import exit
 
-fases = [#0 = alma vermelha; 1 = alma azul; 2 = alma verde
-    atk.Gerarataques(atk.rodada1(),),
-    atk.Gerarataques(atk.rodada2(),),
-    atk.Gerarataques(atk.rodada3(), 2),
-    atk.Gerarataques(atk.rodada4(),),
-    atk.Gerarataques(atk.rodada5(),),
-    atk.Gerarataques(atk.rodada6(), 1),
-    atk.Gerarataques(atk.rodada7(), 2),
-    atk.Gerarataques(atk.rodada8(), 0, 15),
-    atk.Gerarataques(atk.rodada9(), 2, 20),
-    atk.Gerarataques(atk.rodada10(), 0,),
-    atk.Gerarataques(atk.rodada11(), 1, ),
-    atk.Gerarataques(atk.rodada12(), 0, 16),
-    atk.Gerarataques(atk.rodada13(), 0)
-]   
 
 while True:
     cos.fps.tick((60))
@@ -134,8 +120,8 @@ while True:
                 botao.impedeTravaPos = False
                 botao.comecaBatalha = False
                 
-                if cos.fase_atual + 1 >= len(fases):
-                    atk.reseta_rodada(fase)
+                if cos.fase_atual + 1 >= len(atk.fases):
+                    func.reseta_rodada(fase)
                     cos.fase_atual = randint(0, 12)
                     cos.ataques_acabaram = True
                 else:
@@ -174,6 +160,7 @@ while True:
                     cos.telainicial = False
     '''
     
+    janela.tela.blit(wilson_sprite.image, wilson_sprite.rect)
 
 
     func.mostrarDano()
@@ -189,7 +176,7 @@ while True:
         '''        if cos.fase_atual == 2:
         janela.escreveTexto('o próximo ataque utiliza uma mecanica diferente', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
         janela.escreveTexto('use as setinhas para se defender', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2+40)))
-        if cos.fase_atual == len(fases):
+        if cos.fase_atual == len(atk.fases):
             janela.escreveTexto('a demo acaba aqui! aja denovo para crachar o jogo :D', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
         '''
     
@@ -271,10 +258,10 @@ while True:
             cos.velocidade_azul = 6.0
 
         '''if cos.ataques_acabaram:
-            fase = fases[cos.fase_atual]
+            fase = atk.fases[cos.fase_atual]
         else:
-            fase = fases[cos.fase_atual]#declara a fase atual'''
-        fase = fases[cos.fase_atual]
+            fase = atk.fases[cos.fase_atual]#declara a fase atual'''
+        fase = atk.fases[cos.fase_atual]
         if not cos.ataque_iniciou: #criado para os temporizados funcionarem de maneira apropriada
             pygame.time.set_timer(cos.fim_do_ataque, fase.duracao)
             for ataque in fase.ataques:
@@ -366,6 +353,7 @@ while True:
                 cos.mostraTransicao = False
                 botoes[0].comecaBatalha = True
                 cos.ataque_iniciou = False
+                print("transição")
     
     #Tela de Piedade
     if janela.telaAtual == 'piedade':
