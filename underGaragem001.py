@@ -10,7 +10,7 @@ import modulos.constantes as cos
 import modulos.acoes as act
 from sys import exit
 
-fases = [
+fases = [#0 = alma vermelha; 1 = alma azul; 2 = alma verde
     atk.Gerarataques(atk.rodada1(),),
     atk.Gerarataques(atk.rodada2(),),
     atk.Gerarataques(atk.rodada3(), 2),
@@ -18,7 +18,12 @@ fases = [
     atk.Gerarataques(atk.rodada5(),),
     atk.Gerarataques(atk.rodada6(), 1),
     atk.Gerarataques(atk.rodada7(), 2),
-    atk.Gerarataques(atk.rodada8(),)
+    atk.Gerarataques(atk.rodada8(), 0, 15),
+    atk.Gerarataques(atk.rodada9(), 2, 20),
+    atk.Gerarataques(atk.rodada10(), 0,),
+    atk.Gerarataques(atk.rodada11(), 1, ),
+    atk.Gerarataques(atk.rodada12(), 0, 16),
+    atk.Gerarataques(atk.rodada13(), 0)
 ]   
 
 while True:
@@ -26,7 +31,7 @@ while True:
     pygame.display.update()
     eventos = pygame.event.get()
     confirmaAtaque = None
-    
+
     
     for evento in eventos:
         #detecta se o tipo do evento é quando o jogador pressiona e solta rapidamente uma tecla
@@ -38,6 +43,7 @@ while True:
                     alma.estado = 0
             elif evento.key == K_p: #debug de passar as rodadas
                 cos.fase_atual += 1
+                cos.dialogo_atual += 1
                     
         #Detecta se houve o KEYDOWN na tela de seleções        
         if evento.type == KEYDOWN and janela.telaAtual == 'seleções':
@@ -127,13 +133,25 @@ while True:
                 #print("fim do ataque")
                 botao.impedeTravaPos = False
                 botao.comecaBatalha = False
-                cos.fase_atual += 1  
+                
+                if cos.fase_atual + 1 >= len(fases):
+                    atk.reseta_rodada(fase)
+                    cos.fase_atual = randint(0, 12)
+                    cos.ataques_acabaram = True
+                else:
+                    cos.fase_atual += 1  
+                if cos.dialogo_atual + 1 >= len(cos.dialogos):
+                    cos.dialogo_atual = 0
+                else:
+                    cos.dialogo_atual += 1
                 if cos.efeito100limite:
                     cos.vidaAtual = cos.vidaAntes100limite
                     cos.vidaAntes100limite = None
                     cos.efeito100limite = False
                 if cos.efeitoVerde:
                     cos.efeitoVerde = False
+                if cos.consumiuItem:
+                    cos.consumiuItem = False
         #eventos de combate
         if evento.type == cos.fimInv:
             alma.acertavel = True
@@ -146,6 +164,18 @@ while True:
             
     #Tela de seleções    
     janela.corFundo()
+
+    '''    
+    while cos.telainicial:
+            janela.corFundo()
+            janela.escreveTexto('Bem vindo ao undergaragem, aperte qualquer tecla para iniciar o jogo', cos.fonteCustomizada, 'white', (janela.tela.get_width()/2, janela.tela.get_height()/2))
+            for evento in eventos:
+                if evento.type == KEYDOWN:
+                    cos.telainicial = False
+    '''
+    
+
+
     func.mostrarDano()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(200,385))
     janela.escreveTexto('Lutar', cos.fonteCustomizada, botoes[0].cor, (85, 433))
@@ -154,20 +184,21 @@ while True:
     janela.escreveTexto('Poupar', cos.fonteCustomizada, botoes[3].cor, (495, 433))
     
     #textos
-    dialogo_atual = cos.dialogos[cos.fase_atual]
-    if janela.telaAtual == 'seleções':
-        if cos.fase_atual == 2:
-            janela.escreveTexto('o próximo ataque utiliza uma mecanica diferente', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
-            janela.escreveTexto('use as setinhas para se defender', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2+40)))
-        elif cos.fase_atual == len(fases):
+    dialogo_atual = cos.dialogos[cos.dialogo_atual]
+    if janela.telaAtual == 'seleções' and not botao.mirando:
+        '''        if cos.fase_atual == 2:
+        janela.escreveTexto('o próximo ataque utiliza uma mecanica diferente', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
+        janela.escreveTexto('use as setinhas para se defender', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2+40)))
+        if cos.fase_atual == len(fases):
             janela.escreveTexto('a demo acaba aqui! aja denovo para crachar o jogo :D', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
+        '''
+    
+        if isinstance(dialogo_atual, tuple):
+            for i, linha in enumerate(dialogo_atual):
+                janela.escreveTexto(linha, cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2-40+i*20)))
+
         else:
-            if isinstance(dialogo_atual, tuple):
-                for i, linha in enumerate(dialogo_atual):
-                    janela.escreveTexto(linha, cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2-40+i*20)))
- 
-            else:
-                janela.escreveTexto(cos.dialogos[cos.fase_atual], cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2-20)))        
+            janela.escreveTexto(cos.dialogos[cos.dialogo_atual], cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2-20)))        
     
     #vida em barra
     vida_max_barra = pygame.draw.rect(janela.tela, 'red', (330,395, (1*cos.vida), 20))
@@ -214,7 +245,7 @@ while True:
         #Na tela de luta acontecendo, o jogador passa a se mover continuamente quando pressiona e segura uma tecla, o que faz essa detecção é essa variável teclas que recebe a função do pygame get_pressed
         teclas = pygame.key.get_pressed()
         if teclas[pygame.K_x]:
-            velocidade = 1
+            velocidade = 2.0
         if teclas[pygame.K_RIGHT] and not alma.rect.colliderect(colisoes[3].rect):
             cos.x += 1 * velocidade
             cos.direcao = 'direita'
@@ -239,7 +270,11 @@ while True:
             cos.y -= 2
             cos.velocidade_azul = 6.0
 
-        fase = fases[cos.fase_atual]#declara a fase atual
+        '''if cos.ataques_acabaram:
+            fase = fases[cos.fase_atual]
+        else:
+            fase = fases[cos.fase_atual]#declara a fase atual'''
+        fase = fases[cos.fase_atual]
         if not cos.ataque_iniciou: #criado para os temporizados funcionarem de maneira apropriada
             pygame.time.set_timer(cos.fim_do_ataque, fase.duracao)
             for ataque in fase.ataques:
@@ -302,8 +337,8 @@ while True:
             textoEfeito = acao.efeito
             texto2 = ''
             
-        janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (50,220))  
-        janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (50,250))
+        janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (20,220))  
+        janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (20,250))
               
         if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
@@ -319,8 +354,8 @@ while True:
             item.checaAlma()
             
     if janela.telaAtual == 'transiçãoItens':
-        janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (90,230))
-        janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (90,260)) 
+        janela.escreveTexto(f'Você usou {func.itemSelecionado.nome}', cos.fonteBatalha, (255,255,255), (20,230))
+        janela.escreveTexto(f'{func.itemSelecionado.descricao}', cos.fonteBatalha, (255,255,255), (20,260)) 
          
         if not cos.consumiuItem:
             func.itemSelecionado.usar()
@@ -334,7 +369,7 @@ while True:
     
     #Tela de Piedade
     if janela.telaAtual == 'piedade':
-        janela.escreveTexto('Mas não estava amarelo', cos.fonteBatalha, (255,255,255), (40,210))
+        janela.escreveTexto('Mas não estava amarelo', cos.fonteBatalha, (255,255,255), (20,210))
         if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
             if tempoAtual - func.transicaoTempo > 2000:
@@ -357,7 +392,7 @@ while True:
         while janela.telaAtual == 'gameover':
             if not tocouGameOver:
                 pygame.mixer.music.fadeout(280)
-                gameoverMusica = pygame.mixer.music.load('assets/sounds/gameovertheme.mp3')
+                gameoverMusica = pygame.mixer.music.load('PCS/assets/sounds/gameovertheme.mp3')
                 pygame.mixer.music.set_volume(0.6)
                 pygame.mixer.music.play(-1)
                 tocouGameOver = True
@@ -380,5 +415,6 @@ while True:
     
     if cos.wilson_vida_atual <= 0:
         print("fim de jogo Genocida painho")
+        cos.wilson_vida_atual = 1
             
-    janela.atualizaTela() 
+    janela.atualizaTela()
