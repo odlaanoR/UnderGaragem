@@ -5,6 +5,8 @@ import modulos.constantes as cos
 class ataque():
     def __init__(self, cor, ataque_x, ataque_y, ataque_w, ataque_h, mov_x, mov_y, delay, respawn=True):
         self.retangulo = pygame.Rect(ataque_x, ataque_y, ataque_w, ataque_h)
+        self.y_inicial = ataque_y
+        self.x_inicial = ataque_x
         self.y = ataque_y
         self.x = ataque_x
         self.mov_x = mov_x
@@ -61,12 +63,30 @@ class ataque():
         if self.mostrar:
             pygame.draw.rect(surface, self.cor, self.retangulo)
 
+    def resetar(self):
+        self.mostrar = True
+        self.retangulo.x = self.x_inicial
+        self.retangulo.y = self.y_inicial
+
+def reseta_rodada(fase):
+    for ataque in fase.ataques:
+        ataque.resetar()
+        #print('ataque resetado')
+
+
+
+
+
 class Gerarataques():
     def __init__(self, rodada, mudaalma=0, duracao=10):
         self.rodada = rodada
         self.ataques = self.rodada    
         self.mudaalma = mudaalma#declara o tipo de alma que será usado no ataque
         self.duracao = duracao*1000
+
+
+
+
 
 
 def rodada1():
