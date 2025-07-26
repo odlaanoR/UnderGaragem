@@ -12,7 +12,7 @@ import modulos.constantes as cos
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
 
 def iniciaJogo():
-    cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
+    cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
     pygame.mixer.music.set_volume(0.35)
     pygame.mixer.music.play(-1)
     janela.mudarTela('seleções')
@@ -44,13 +44,13 @@ def reiniciarJogo():
     cos.jogador_atk = 1
     
     if not cos.zerouJogo:
-        cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
+        cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
         pygame.mixer.music.set_volume(0.35)
         pygame.mixer.music.play(-1)
         janela.mudarTela('seleções') 
     else:
-        cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
-        pygame.mixer.music.set_volume(0.35)
+        cos.musicaFundo = pygame.mixer.music.load("PCS/assets/sounds/[Tremba's Contract].mp3")
+        pygame.mixer.music.set_volume(0.6)
         pygame.mixer.music.play(-1)
         janela.mudarTela('Menu')
                 
