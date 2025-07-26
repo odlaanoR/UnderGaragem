@@ -71,7 +71,4 @@ class Wilson(pygame.sprite.Sprite):
 wilson_sprite = Wilson()
 artes.add(wilson_sprite)
 
-
-
-
 print('alma carregando...')
