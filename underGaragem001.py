@@ -549,7 +549,6 @@ while True:
                     if evento.key == K_r:
                         cos.zerouJogo = True
                         func.reiniciarJogo()
-                        janela.mudarTela('Menu')
                         cos.x = 286
                         cos.y = 270
                         
@@ -576,7 +575,6 @@ while True:
                     if evento.key == K_r:
                         cos.zerouJogo = True
                         func.reiniciarJogo()
-                        janela.mudarTela('Menu')
                         cos.x = 286
                         cos.y = 270
             
