@@ -11,14 +11,12 @@ import modulos.constantes as cos
 import modulos.acoes as act
 from sys import exit
 
-
 while True:
     cos.fps.tick((60))
     pygame.display.update()
     eventos = pygame.event.get()
     confirmaAtaque = None
 
-    
     for evento in eventos:
         #detecta se o tipo do evento é quando o jogador pressiona e solta rapidamente uma tecla
         if evento.type == KEYDOWN:
@@ -43,6 +41,7 @@ while True:
             if evento.key == K_z:
                 cos.x = 30
                 cos.y = 220
+                cos.desapareceMensagem = True
                 for botao in botoes:
                     botao.checaClique(evento.key)
                 if botoes[0].confirmaSelecao(evento.key):
@@ -60,6 +59,7 @@ while True:
                     botao.cancelaSelecao()
                 cos.x = 65
                 cos.y = 450
+                cos.desapareceMensagem = False
 
         #Eventos detectados após o jogador selecionar o botão de Agir      
         if evento.type == KEYDOWN and janela.telaAtual == 'ações':
@@ -97,23 +97,34 @@ while True:
                 janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
+                cos.desapareceMensagem = False
                 
         #Eventos detectados após o jogador selecionar "Item"         
-        if evento.type == KEYDOWN and janela.telaAtual == 'inventário': 
-            if evento.key == K_DOWN:
-                cos.y += 35
-            if evento.key == K_UP:
-                cos.y -= 35
+        if evento.type == KEYDOWN and janela.telaAtual == 'inventário':
             if evento.key == K_RIGHT:
-                cos.x += 200
+                novaPos = (alma.rect.x + 200, alma.rect.y)
+                if func.podeMover(novaPos):
+                    cos.x += 200
             if evento.key == K_LEFT:
-                cos.x -= 200
+                novaPos = (alma.rect.x - 200, alma.rect.y)
+                if func.podeMover(novaPos):
+                    cos.x -= 200
+            if evento.key == K_DOWN:
+                novaPos = (alma.rect.x, alma.rect.y + 35)
+                if func.podeMover(novaPos):
+                    cos.y += 35
+            if evento.key == K_UP:
+                novaPos = (alma.rect.x, alma.rect.y - 35)
+                if func.podeMover(novaPos):
+                    cos.y -= 35
+                    
             if evento.key == K_z:
                 func.consomeItem(evento.key)
             if evento.key == K_x:
                 janela.mudarTela('seleções')
                 cos.x = 65
                 cos.y = 450
+                cos.desapareceMensagem = False
                              
         if evento.type == KEYDOWN and janela.telaAtual == 'piedade':
             if evento.key == K_z:
@@ -133,7 +144,6 @@ while True:
             if evento.key == K_r:
                 func.reiniciarJogo()
                 janela.mudarTela('Menu')
-                
         if evento.type == QUIT:
             pygame.quit()
             exit()
@@ -148,6 +158,7 @@ while True:
                 #print("fim do ataque")
                 botao.impedeTravaPos = False
                 botao.comecaBatalha = False
+                cos.desapareceMensagem = False
                 
                 if cos.fase_atual + 1 >= len(atk.fases):
                     func.reseta_rodada(fase)
@@ -180,18 +191,15 @@ while True:
     #Tela de Menu
     while janela.telaAtual == 'Menu':
         if not cos.tocouMenu:
-            cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
-            pygame.mixer.music.set_volume(0.6)
-            pygame.mixer.music.play(-1)
             cos.tocouMenu = True
             janela.atualizaTela()
         
         janela.corFundo()
-        janela.escreveTexto('UNDERGARAGEM', cos.fonte, (255,255,255), (janela.tela.get_width()/2 - 100, 100))
         pygame.draw.rect(janela.tela, 'white', cos.botaoIniciar, width=2)
         pygame.draw.rect(janela.tela, 'white', cos.botaoCreditos, width=2)
         janela.escreveTexto('Iniciar', cos.fonteCustomizada, 'white', (300,253))
         janela.escreveTexto('Créditos', cos.fonteCustomizada, 'white', (298, 298))
+        janela.tela.blit(cos.tituloMenu, (45, -80))
         alma.update()
         janela.tela.blit(alma.image, alma.rect)
         janela.atualizaTela()
@@ -202,12 +210,12 @@ while True:
                 pygame.quit()
                 exit()
             if evento.type == KEYDOWN:
-                if evento.key == K_DOWN:
+                if evento.key == K_DOWN and alma.rect.colliderect(cos.botaoIniciar):
                     cos.y += 45
                     passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
                     passaAcao.set_volume(0.3)
                     passaAcao.play()
-                if evento.key == K_UP:
+                if evento.key == K_UP and alma.rect.colliderect(cos.botaoCreditos):
                     cos.y -= 45
                     passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
                     passaAcao.set_volume(0.3)
@@ -215,7 +223,7 @@ while True:
                 if evento.key == K_z:
                     if alma.rect.colliderect(cos.botaoIniciar):
                         print('pog')
-                        func.reiniciarJogo()
+                        func.iniciaJogo()
                         cos.zerouJogo = False
                     if alma.rect.colliderect(cos.botaoCreditos):
                         print('gop')
@@ -243,8 +251,9 @@ while True:
     janela.escreveTexto('Poupar', cos.fonteCustomizada, botoes[3].cor, (495, 433))
     
     #textos
+    
     dialogo_atual = cos.dialogos[cos.dialogo_atual]
-    if janela.telaAtual == 'seleções' and not botao.mirando:
+    if janela.telaAtual == 'seleções' and not botao.mirando and cos.desapareceMensagem == False:
         '''        if cos.fase_atual == 2:
         janela.escreveTexto('o próximo ataque utiliza uma mecanica diferente', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2)))
         janela.escreveTexto('use as setinhas para se defender', cos.fonteCustomizada, 'white', (20, (janela.tela.get_height()/2+40)))
@@ -363,42 +372,51 @@ while True:
     if janela.telaAtual == 'seleções':
         cos.efeito100limite = False
 
-    #Tela de Agir
+    if janela.telaAtual == 'Wilson':
+        janela.escreveTexto('Wilson Tremba', cos.fonteBatalha, (255, 255, 255), (40, 200))
+
+    if janela.telaAtual == 'mercy':
+        janela.escreveTexto('Poupar', cos.fonteBatalha, (255, 255, 255), (40, 200))
+
+        #Tela de Agir
     if janela.telaAtual == 'ações':   
         func.printaAcoes()
         for acao in act.acoes:
             acao.checaAlma()
                 
     #Na tela de ações,            
-     if janela.telaAtual == 'transiçãoAções':
+    if janela.telaAtual == 'transiçãoAções':
         acao = cos.acaoSelecionada
         if acao.nome == 'Conversar':
             if cos.usouConversar == 1:
                 textoEfeito = 'Você tenta dialogar com o Wilson Tremba...'
                 texto2 = 'Mas ele não respondeu'
             elif cos.usouConversar == 2:
-                textoEfeito = 'Wilson Tremba se tremeu ao você elogiar seu relógio.'
-                texto2 = ''
+                textoEfeito = 'Você se força a dizer que o lugar é bonito'
+                texto2 = 'Wilson Tremba não acredita.'
             elif cos.usouConversar == 3:
-                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = ''
+                textoEfeito = 'Você elogia o cheiro do Wilson Tremba'
+                texto2 = 'Imediatamente, um cheiro de ferro incensa o lugar'
             elif cos.usouConversar == 4:
-                textoEfeito = 'Wilson Tremba parece amigável agora'
-                texto2 = ''
+                textoEfeito = 'Você xinga o wilson tremba.'
+                texto2 = 'Ele rebate dizendo que a trolada final irá começar'
             elif cos.usouConversar == 5:
                 textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = ''
+                texto2 = 'Você percebe que ele também está com as mãos no bolso'
             elif cos.usouConversar == 6:
-                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = ''
+                textoEfeito = 'Você fala de um vídeo engraçado do tik tok'
+                texto2 = 'Alguém parece ter gargalhado ao fundo da sala '
             elif cos.usouConversar == 7:
                 textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
                 texto2 = ''
             elif cos.usouConversar == 8:
-                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = ''
+                textoEfeito = 'Wilson Tremba se tremeu ao você elogiar seu relógio.'
+                texto2 = 'Ele parece gostar bastante dele'
             elif cos.usouConversar == 9:
-                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
+                textoEfeito = 'Você disse que queria ter um relógio como o dele'
+                texto2 = 'Wilson Tremba parece amigável agora'
+            else:
+                textoEfeito = 'Parece que Wilson Tremba está satisfeito'
                 texto2 = ''
                 
         elif acao.nome == 'Vasculhar':
@@ -422,8 +440,12 @@ while True:
                     cos.encontrouRevolver = True
                     cos.jogador_atk += 998      
         elif acao.nome == 'Checar':
-            textoEfeito = acao.efeito
-            texto2 = ''
+            if cos.usouConversar < 3:
+                textoEfeito = acao.efeito
+                texto2 = 'Cheira a onipresença... e à laranja'
+            else:
+                textoEfeito = acao.efeito
+                texto2 = 'Cheira a ferro enferrujado'
         elif acao.nome == 'Implorar por Piedade':
             textoEfeito = acao.efeito
             texto2 = ''
@@ -474,10 +496,16 @@ while True:
                 
     if janela.telaAtual == 'transiçãoPoupou':
         janela.escreveTexto('Você poupou Wilsom Tremba', cos.fonteBatalha, 'gray', (40,210))
+        if not cos.transicaoFinal:
+            cos.transicaoTempo = pygame.time.get_ticks()
+            cos.transicaoFinal = True
+            cos.mostraTransicao = True 
+
         if cos.mostraTransicao:
             tempoAtual = pygame.time.get_ticks()
             if tempoAtual - cos.transicaoTempo > 3000:
                 cos.mostraTransicao = False
+                cos.transicaoFinal = False
                 janela.mudarTela('FimdaPacifista')
                 
     if janela.telaAtual == 'transiçãoMira':
@@ -503,7 +531,7 @@ while True:
             if not tocouGameOver:
                 pygame.mixer.music.fadeout(280)
                 cos.musicaFundo = pygame.mixer.music.load('assets/sounds/gameovertheme.mp3')
-                pygame.mixer.music.set_volume(0.6)
+                pygame.mixer.music.set_volume(0.45)
                 pygame.mixer.music.play(-1)
                 tocouGameOver = True
                 janela.atualizaTela()
@@ -522,35 +550,47 @@ while True:
                     if evento.key == K_r:
                         func.reiniciarJogo()
     
-    if cos.wilson_vida_atual <= 0:
-        janela.mudarTela('FimdaGenocida')
-        tocouGenocida = False
-        while janela.telaAtual == 'FimdaGenocida':
-            if not tocouGenocida:
-                cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
-                pygame.mixer.music.set_volume(0.6)
-                pygame.mixer.music.play(-1)
-                tocouGenocida = True
-                janela.atualizaTela()
-            
-            janela.corFundo()
-            janela.escreveTexto('Você tentou matar o Wilson Tremba....', cos.fonteCustomizada, (255,255,255), (46, 150))
-            janela.escreveTexto('Mas ele não pode ser morto.', cos.fonteCustomizada, (255,255,255), (56, 250))
-            janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, (255,255,255), (26, 400))
+    if cos.wilson_vida_atual <= 0 and not cos.transicaoFinal:
+        janela.mudarTela('TransiçãoGenocida')
+        cos.transicaoTempo = pygame.time.get_ticks()
+        cos.transicaoFinal = True
+        cos.mostraTransicao = True 
+    if janela.telaAtual == 'TransiçãoGenocida':
+        janela.escreveTexto('Você Matou o Wilsom Tremba', cos.fonteBatalha, 'gray', (40,210))
+        if cos.mostraTransicao:
+            tempoAtual = pygame.time.get_ticks()
+            if tempoAtual - cos.transicaoTempo > 3000:
+                cos.mostraTransicao = False
+                cos.transicaoFinal = False
+                janela.mudarTela('FimdaGenocida')
+                tocouGenocida = False
+                
+    while janela.telaAtual == 'FimdaGenocida':
+        if not tocouGenocida:
+            cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
+            pygame.mixer.music.set_volume(0.6)
+            pygame.mixer.music.play(-1)
+            tocouGenocida = True
             janela.atualizaTela()
-            cos.wilson_vida_atual = 1
             
-            for evento in pygame.event.get():
-                if evento.type == QUIT:
-                    print("fechando o jogo")
-                    pygame.quit()
-                    exit()
-                elif evento.type == KEYDOWN:
-                    if evento.key == K_r:
-                        cos.zerouJogo = True
-                        func.reiniciarJogo()
-                        cos.x = 286
-                        cos.y = 270
+        janela.corFundo()
+        janela.escreveTexto('Você tentou matar o Wilson Tremba....', cos.fonteCustomizada, (255,255,255), (46, 150))
+        janela.escreveTexto('Mas ele não pode ser morto.', cos.fonteCustomizada, (255,255,255), (56, 250))
+        janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, (255,255,255), (26, 400))
+        janela.atualizaTela()
+            
+        for evento in pygame.event.get():
+            if evento.type == QUIT:
+                print("fechando o jogo")
+                pygame.quit()
+                exit()
+            elif evento.type == KEYDOWN:
+                if evento.key == K_r:
+                    cos.zerouJogo = True
+                    func.reiniciarJogo()
+                    janela.mudarTela('Menu')
+                    cos.x = 286
+                    cos.y = 270
                         
     while janela.telaAtual == 'FimdaPacifista':
         if not cos.tocouFimPacifista:
@@ -575,7 +615,7 @@ while True:
                     if evento.key == K_r:
                         cos.zerouJogo = True
                         func.reiniciarJogo()
+                        janela.mudarTela('Menu')
                         cos.x = 286
                         cos.y = 270
-            
     janela.atualizaTela()
