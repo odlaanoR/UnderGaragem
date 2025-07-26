@@ -10,10 +10,19 @@ from modulos.ataques import *
 import modulos.constantes as cos
 
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
+
+def iniciaJogo():
+    cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
+    pygame.mixer.music.set_volume(0.35)
+    pygame.mixer.music.play(-1)
+    janela.mudarTela('seleções')
+    cos.x = 65
+    cos.y = 450
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciarJogo():
     print('reiniciando jogo')
     pygame.event.clear()
+    reseta_acoes()
     reseta_itens()
     reseta_ataques()
     reseta_jogador()
@@ -24,19 +33,27 @@ def reiniciarJogo():
     cos.mostraTransicao = False
     cos.acaoSelecionada = None
     cos.usouAcao = False
-    cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
-    pygame.mixer.music.set_volume(0.45)
-    pygame.mixer.music.play(-1)
+    cos.consumiuItem = False
+    cos.efeitoVerde = False
+    cos.efeito100limite = False
+    cos.encontrouBigaragem = False
+    cos.encontrouMc = False
+    cos.encontrouRevolver = False
+    cos.desapareceMensagem = False
+    cos.jogador_def = 0
+    cos.jogador_atk = 1
+    
     if not cos.zerouJogo:
         cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(0.35)
         pygame.mixer.music.play(-1)
         janela.mudarTela('seleções') 
     else:
-        cos.musicaFundo = pygame.mixer.music.load("PCS/assets/sounds/[Tremba's Contract].mp3")
-        pygame.mixer.music.set_volume(0.2)
+        cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
+        pygame.mixer.music.set_volume(0.35)
         pygame.mixer.music.play(-1)
         janela.mudarTela('Menu')
+                
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens(botoes):
     iy = 0
@@ -44,7 +61,7 @@ def printaItens(botoes):
     colisaoItens = []
     for item in itens:
         if iy < 4:
-            posicaoItem = (175 + ix * 200, 215 + iy * 35)
+            posicaoItem = (155 + ix * 200, 215 + iy * 35)
             item.colisao = pygame.Rect(posicaoItem[0] - 20, posicaoItem[1] + 10, 50, 10) 
             colisaoItens.append(item.colisao)
             janela.escreveTexto(f'{item.nome}', cos.fonteBatalha, (255,255,255), posicaoItem)
@@ -54,7 +71,7 @@ def printaItens(botoes):
         else:
             iy = 0
             ix += 1
-            posicaoItem = (175 + ix * 200, 215 + iy * 35)
+            posicaoItem = (155 + ix * 200, 215 + iy * 35)
             item.colisao = pygame.Rect(posicaoItem[0] - 20, posicaoItem[1] + 10, 50, 10) 
             colisaoItens.append(item.colisao)
             janela.escreveTexto(f'{item.nome}', cos.fonteBatalha, (255,255,255), posicaoItem)
@@ -64,7 +81,7 @@ def printaAcoes():
     iy = 0
     colisaoAcoes = []
     for acao in act.acoes:
-        if iy <= 1:
+        if iy <= 2:
             posicaoAcao = (55 + ix * 200, 205 + iy * 35)
             acao.colisao = pygame.Rect(posicaoAcao[0] - 20, posicaoAcao[1] + 10, 50, 10)
             colisaoAcoes.append(acao.colisao)
@@ -128,11 +145,11 @@ def verde():
     
 def ataque_player(mira):
     usouMira()
-    if mira < 319:
-        precisao = mira/320
+    if mira < 300:
+        precisao = mira/300
         print(precisao)
-    elif mira > 321:
-        precisao = max(0, 1 - (mira - 320)/320)
+    elif mira > 300:
+        precisao = max(0, 1 - (mira - 300)/300)
         print(precisao)
     else:
         precisao = 1.5
@@ -146,11 +163,11 @@ def ataque_player(mira):
             cos.dano_tempo = pygame.time.get_ticks()
             print(cos.dano_mensagem)
         else:
-            cos.dano_mensagem = 'bloqueado!'
+            cos.dano_mensagem = 'BLOQUEADO'
             cos.dano_cor = 'gray'
             cos.dano_tempo = pygame.time.get_ticks()
     else:
-        cos.dano_mensagem = 'Errou!'
+        cos.dano_mensagem = 'ERROU!'
         cos.dano_cor = 'gray'
         cos.dano_tempo = pygame.time.get_ticks()
 
@@ -158,7 +175,7 @@ def mostrarDano():
     if cos.dano_mensagem:
         tempo_atual = pygame.time.get_ticks()
         if tempo_atual - cos.dano_tempo < 1500:  # mostra por 1.5 segundos
-            janela.escreveTexto(cos.dano_mensagem, cos.fonteBatalha, cos.dano_cor, (janela.tela.get_width()/2, janela.tela.get_height()/2 - 150))
+            janela.escreveTexto(cos.dano_mensagem, cos.fonteDano, cos.dano_cor, (janela.tela.get_width()/2, janela.tela.get_height()/2 - 150))
         else:
             # Limpa a mensagem após o tempo
             cos.dano_mensagem = None
@@ -196,20 +213,25 @@ def reseta_ataques():
     ]   
     for fase in atk.fases:
         reseta_rodada(fase)
-        
     cos.fase_atual = 0
     cos.ataque_iniciou = False
     cos.ataques_acabaram = False
     
 def reseta_jogador():
-    cos.vidaAtual = 70
+    cos.vidaAtual = 92
     cos.wilson_vida_atual = 14000
-
     alma.acertavel = True
     alma.estado = 0
-
     cos.x = 65
     cos.y = 450
+
+def reseta_acoes():
+    act.acoes = [
+    act.Acao('Checar', 'Wilson Tremba, 99 ATK, 99 DEF, o patrão'),
+    act.Acao('Vasculhar', ''),
+    act.Acao('Conversar', ''),
+    act.Acao('Implorar por Piedade', 'Mas o SEU nome não estava amarelo.')
+    ]
 def reseta_itens():
     global itens
     itens = [
@@ -218,15 +240,9 @@ def reseta_itens():
         Item('Sopa do Infinito','Você sente como se todas as coisas estivessem equilibradas'),
         Item('100 limite','Você se sente ilimitado (por uma rodada)'),
         Item('Verde','+10 HP Você está verde???????'),
-        Item('BiGaragem','Você recupera 50 de vida'),
-        Item('MacLanche Infeliz','De repente, tudo parece uma desgraça. + DEF, +ATK'),
         Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!'),
-        Item('O revólver que matou "Felipe"', 'Você equipou essa coisa, você escuta gritos ao seu redor')
     ]
 
-    cos.consumiuItem = False
-    cos.efeitoVerde = False
-    cos.efeito100limite = False
 def reseta_botoes():
     from modulos.selecoes import botoes
     for botao in botoes:
@@ -237,5 +253,12 @@ def reseta_botoes():
         botao.passou = False
         botao.gambiarraMsg = pygame.Rect((0,0,0,0))
         botao.x_mira = 40
-        
+   
+def podeMover(novaPos): #função que serve para limitar a movimentação do jogador no inventário
+    global colisoesNovas
+    colisoesNovas = [item.colisao for item in itens]
+    copia = alma.rect.copy() #cria uma cópia da colisão atual da alma 
+    copia.center = novaPos
+    return any(copia.colliderect(colisao) for colisao in colisoesNovas) #retorna True se houver colisão entre dois objetos colidíveis, caso não haja nenhuma colisão, retorna False.
+                
 print('inicializando funções...')
