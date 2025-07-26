@@ -9,43 +9,25 @@ import modulos.ataques as atk
 from modulos.ataques import *
 import modulos.constantes as cos
 
-
-
 escudo = pygame.draw.line(janela.tela, 'blue', (0,0), (0,0), 1)
-
 #Essa função serve para reiniciar tudo que já aconteceu, então se, por exemplo, o jogador já tiver usado um item e ele morre na batalha, a função é chamada e restaura todos os itens dele.
 def reiniciarJogo():
-
     print('reiniciando jogo')
-
-
     pygame.event.clear()
     reseta_itens()
     reseta_ataques()
     reseta_jogador()
     reseta_botoes()
-
-
     cos.dialogo_atual = 0
     cos.usouConversar = 0
     cos.usouVasculhar = 0
     cos.mostraTransicao = False
     cos.acaoSelecionada = None
     cos.usouAcao = False
-
     cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
     pygame.mixer.music.set_volume(0.45)
     pygame.mixer.music.play(-1)
-
-
     janela.mudarTela('seleções')
-
-
-
-
-
-
-
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens(botoes):
     iy = 0
@@ -185,7 +167,6 @@ def reseta_rodada(fase):
     for ataque in fase.ataques:
         ataque.resetar()
         #print('ataque resetado')
-
 #Funções para resetar todas as coisas
 
 def reseta_ataques():
@@ -210,8 +191,7 @@ def reseta_ataques():
     cos.fase_atual = 0
     cos.ataque_iniciou = False
     cos.ataques_acabaram = False
-
-
+    
 def reseta_jogador():
     cos.vidaAtual = 70
     cos.wilson_vida_atual = 14000
@@ -221,8 +201,6 @@ def reseta_jogador():
 
     cos.x = 65
     cos.y = 450
-
-
 def reseta_itens():
     global itens
     itens = [
@@ -240,7 +218,6 @@ def reseta_itens():
     cos.consumiuItem = False
     cos.efeitoVerde = False
     cos.efeito100limite = False
-
 def reseta_botoes():
     from modulos.selecoes import botoes
     for botao in botoes:
@@ -251,6 +228,5 @@ def reseta_botoes():
         botao.passou = False
         botao.gambiarraMsg = pygame.Rect((0,0,0,0))
         botao.x_mira = 40
-
-
+        
 print('inicializando funções...')
