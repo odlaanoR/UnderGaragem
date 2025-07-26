@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
-from modulos.alma import alma
-from modulos.alma import wilson_sprite
+from modulos.alma import *
 from modulos.janelas import *
 from modulos.selecoes import *
 from modulos.item import *
@@ -212,12 +211,12 @@ while True:
             if evento.type == KEYDOWN:
                 if evento.key == K_DOWN and alma.rect.colliderect(cos.botaoIniciar):
                     cos.y += 45
-                    passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
+                    passaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_squeak.mp3')
                     passaAcao.set_volume(0.3)
                     passaAcao.play()
                 if evento.key == K_UP and alma.rect.colliderect(cos.botaoCreditos):
                     cos.y -= 45
-                    passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
+                    passaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_squeak.mp3')
                     passaAcao.set_volume(0.3)
                     passaAcao.play()
                 if evento.key == K_z:
@@ -241,7 +240,6 @@ while True:
     '''
     
     janela.tela.blit(wilson_sprite.image, wilson_sprite.rect)
-
 
     func.mostrarDano()
     janela.escreveTexto(f'HP:{cos.vidaAtual}/{cos.vida}', cos.fonte, (255,255,255),(200,385))
@@ -290,7 +288,6 @@ while True:
         botao.selecaoMensagem(cos.fonteBatalha)
         botao.mirar(confirmaAtaque)
         botao.batalhaAcontece()
-    confirmaAtaque = None
     
     #Tela de Luta
     if botoes[0].comecaBatalha and janela.telaAtual == 'lutaAcontecendo':
@@ -401,14 +398,14 @@ while True:
                 textoEfeito = 'Você xinga o wilson tremba.'
                 texto2 = 'Ele rebate dizendo que a trolada final irá começar'
             elif cos.usouConversar == 5:
-                textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = 'Você percebe que ele também está com as mãos no bolso'
+                textoEfeito = 'Você se candidata a uma vaga de emprego no lugar'
+                texto2 = 'Ele recusa.'
             elif cos.usouConversar == 6:
                 textoEfeito = 'Você fala de um vídeo engraçado do tik tok'
                 texto2 = 'Alguém parece ter gargalhado ao fundo da sala '
             elif cos.usouConversar == 7:
                 textoEfeito = 'Wilson Tremba está gesticulando com suas mãos'
-                texto2 = ''
+                texto2 = 'Você percebe que ele também está com as mãos no bolso'
             elif cos.usouConversar == 8:
                 textoEfeito = 'Wilson Tremba se tremeu ao você elogiar seu relógio.'
                 texto2 = 'Ele parece gostar bastante dele'
@@ -518,10 +515,14 @@ while True:
                 
     if janela.telaAtual == 'Créditos':
         janela.corFundo()
-        janela.escreveTexto('Lucas Leandro', cos.fonteCustomizada, (255,255,255), (250, 150))
-        janela.escreveTexto('Ronaldo Cesar', cos.fonteCustomizada, (255,255,255), (250, 200))
-        janela.escreveTexto('Heitor Higino', cos.fonteCustomizada, (255,255,255), (250, 250))
-        janela.escreveTexto('José Marcus', cos.fonteCustomizada, (255,255,255), (250, 300))
+        janela.escreveTexto('Código:', cos.fonteCustomizada, (255,255,255), (295, 80))
+        janela.escreveTexto('Lucas Leandro', cos.fonteCustomizada, (255,255,255), (263, 110))
+        janela.escreveTexto('Ronaldo Cesar', cos.fonteCustomizada, (255,255,255), (263, 140))
+        janela.escreveTexto('Agradecimentos especiais:', cos.fonteCustomizada, (255,255,255), (200, 200))
+        janela.escreveTexto('Músicas: Heitor Higino', cos.fonteCustomizada, (255,255,255), (220, 230))
+        janela.escreveTexto('Sprites: José Marcus', cos.fonteCustomizada, (255,255,255), (232, 260))
+        janela.escreveTexto('E a todos os nossos amigos que deram mais ideias para o jogo', cos.fonteCustomizada, (255,255,255), (20, 320))
+        janela.escreveTexto('Aperte X para voltar', cos.fonteCustomizada, 'yellow', (36, 430))
                 
     #Tela de Gameover. Nessa tela toda a movimentação e interação do jogador é limitada ao jogador chegar a 0 de vida (exceto pela tecla R que reinicia o jogo).
     if cos.vidaAtual <= 0:
@@ -530,7 +531,7 @@ while True:
         while janela.telaAtual == 'gameover':
             if not tocouGameOver:
                 pygame.mixer.music.fadeout(280)
-                cos.musicaFundo = pygame.mixer.music.load('assets/sounds/gameovertheme.mp3')
+                cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/gameovertheme.mp3')
                 pygame.mixer.music.set_volume(0.45)
                 pygame.mixer.music.play(-1)
                 tocouGameOver = True
@@ -567,7 +568,7 @@ while True:
                 
     while janela.telaAtual == 'FimdaGenocida':
         if not tocouGenocida:
-            cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
+            cos.musicaFundo = pygame.mixer.music.load("PCS/assets/sounds/[Tremba's Contract].mp3")
             pygame.mixer.music.set_volume(0.6)
             pygame.mixer.music.play(-1)
             tocouGenocida = True
@@ -576,7 +577,7 @@ while True:
         janela.corFundo()
         janela.escreveTexto('Você tentou matar o Wilson Tremba....', cos.fonteCustomizada, (255,255,255), (46, 150))
         janela.escreveTexto('Mas ele não pode ser morto.', cos.fonteCustomizada, (255,255,255), (56, 250))
-        janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, (255,255,255), (26, 400))
+        janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, 'yellow', (26, 400))
         janela.atualizaTela()
             
         for evento in pygame.event.get():
@@ -594,7 +595,7 @@ while True:
                         
     while janela.telaAtual == 'FimdaPacifista':
         if not cos.tocouFimPacifista:
-            cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
+            cos.musicaFundo = pygame.mixer.music.load("PCS/assets/sounds/[Tremba's Contract].mp3")
             pygame.mixer.music.set_volume(0.6)
             pygame.mixer.music.play(-1)
             cos.tocouFimPacifista = True
@@ -603,7 +604,7 @@ while True:
         janela.escreveTexto('Você terminou o Jogo! Parabéns!', cos.fonteCustomizada, (255,255,255), (158, 150))
         janela.escreveTexto('Se quiser entrar no nosso Hall da Fama mande um email', cos.fonteCustomizada, (255,255,255), (55, 200))
         janela.escreveTexto('para esse endereço agaragemdoperigo@gmail.com', cos.fonteCustomizada, (255,255,255), (78, 250))
-        janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, (255,255,255), (26, 400))
+        janela.escreveTexto('Aperte R para reiniciar o jogo', cos.fonteCustomizada, 'yellow', (26, 400))
         janela.atualizaTela()
         
         for evento in pygame.event.get():
