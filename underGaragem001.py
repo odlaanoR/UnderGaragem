@@ -215,7 +215,7 @@ while True:
                 if evento.key == K_z:
                     if alma.rect.colliderect(cos.botaoIniciar):
                         print('pog')
-                        func.iniciaJogo()
+                        func.reiniciarJogo()
                         cos.zerouJogo = False
                     if alma.rect.colliderect(cos.botaoCreditos):
                         print('gop')
