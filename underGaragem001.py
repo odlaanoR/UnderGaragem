@@ -429,7 +429,7 @@ while True:
             texto2 = ''
         elif acao.nome == 'O revolver que matou "Felipe"':
             textoEfeito = 'Você equipou essa coisa, você escuta gritos ao seu redor'
-            texto2 = 'Nele está cravado em vermelho "Felipe"'
+            texto2 = 'Você sente que isso pode machucar alguém'
             
         janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (50,220))  
         janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (50,250))
