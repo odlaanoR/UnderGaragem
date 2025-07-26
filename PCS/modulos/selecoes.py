@@ -103,7 +103,11 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def selecaoMensagem(self, fonte):
         if self.mostraMsg:
-            janela.tela.blit(fonte.render(self.mensagem, True, (255,255,255)), (43,205))
+            if cos.usouConversar < 9:
+                cor = (255,255,255)
+            else:
+                cor = (255,255,0)
+            janela.tela.blit(fonte.render(self.mensagem, True, cor), (43,205))
 
     def confirmaLuta(self):
         self.mirando = True
@@ -117,7 +121,10 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         janela.mudarTela('inventário')
             
     def confirmaPiedade(self):
-        janela.mudarTela('piedade')
+        if cos.usouConversar < 9:
+            janela.mudarTela('piedade')
+        else:
+            janela.mudarTela('transiçãoPoupou')
         cos.x = 320
         cos.y = 260
         #print('Mas não estava amarelo')
