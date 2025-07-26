@@ -14,7 +14,12 @@ fps = pygame.time.Clock()
 vida = 92
 vidaAtual = 70
 direcao = None
-telainicial = True
+zerouJogo = False
+#telainicial = True
+
+#Tela do Menu
+botaoIniciar = pygame.Rect(270, 250, 120, 40)
+botaoCreditos = pygame.Rect(270, 295, 120, 40)
 
 #Variaveis de ataques e etc
 ataque_iniciou = False
@@ -46,6 +51,9 @@ vidaAntes100limite = False
 efeitoVerde = False
 efeitoMcInfeliz = False
 consumiuItem = False
+encontrouBigaragem = False
+encontrouMc = False
+encontrouRevolver = False
 
 #Contador de Ações
 usouConversar = 0
