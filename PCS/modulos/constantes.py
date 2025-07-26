@@ -83,6 +83,8 @@ dano_snd = pygame.mixer.Sound('PCS/assets/sounds/dano.mp3')
 parry_snd = pygame.mixer.Sound('PCS/assets/sounds/parry.mp3')
 clica_som = pygame.mixer.Sound('PCS/assets/sounds/snd_select.mp3')
 cura_som = pygame.mixer.Sound('PCS/assets/sounds/snd_heal.wav')
+tocouMenu = False
+tocouFimPacifista = False
 
 #textos
 dialogos = (
