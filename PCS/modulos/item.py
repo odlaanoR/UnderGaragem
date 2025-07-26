@@ -16,8 +16,7 @@ class Item():
         self.passou = False
         
     def usar(self):
-
-        print("usar item chamado")
+        global vidaAtual
         if self.nome == 'Bolo de Sushi': 
             cos.vidaAtual = min(cos.vidaAtual + 40, cos.vida)
             cos.cura_som.play()
@@ -40,7 +39,6 @@ class Item():
             cos.efeitoVerde = True
         elif self.nome == 'BiGaragem':
             cos.vidaAtual = min(cos.vidaAtual + 50, cos.vida)
-            print("curinhaa")
             cos.cura_som.play()
         elif self.nome == 'MacLanche Infeliz':
             cos.efeitoMcInfeliz = True
@@ -71,14 +69,14 @@ class Item():
                 self.passou = False
         else:
             self.passou = True
-
+            
 itens = [
     Item('Bolo de Sushi', 'Você recupera 40 de vida'),
     Item('Cuscuz Paulista','NAOOOOOOOOOOOOOOOOOOOOOOO'),
     Item('Sopa do Infinito','Você sente como se todas as coisas estivessem equilibradas'),
     Item('100 limite','Você se sente ilimitado (por uma rodada)'),
     Item('Verde','+10 HP Você está verde???????'),
-    Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!'),
+    Item('Gororoba Misteriosa','Cura aleatória. Boa sorte!')
 ]
 
 print('item carregando...')
