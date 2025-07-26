@@ -32,7 +32,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         if alma.rect.colliderect(self.botao):
             self.cor = self.novaCor
             if self.passou:
-                passaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_squeak.mp3')
+                passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
                 passaAcao.set_volume(0.3)
                 passaAcao.play()
                 self.passou = False   
@@ -42,17 +42,17 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             
     def checaClique(self, tecla):
         if tecla == K_z and alma.rect.colliderect(self.botao):
-            clicaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_select.mp3')
+            clicaAcao = pygame.mixer.Sound('assets/sounds/snd_select.mp3')
             clicaAcao.set_volume(0.4)
             clicaAcao.play()
             self.gambiarraMsg = pygame.Rect(30, 215, 10, 10)
             if self.mensagem == 'Item':
                 global x, y
-                cos.x = 155
+                cos.x = 140
                 cos.y = 265
                 janela.mudarTela('inventário')
                 self.mostraMsg = False
-            elif self.mensagem == 'Checar':
+            elif self.mensagem == 'Agir':
                 cos.x = 40
                 cos.y = 220
                 janela.mudarTela('ações')
@@ -63,7 +63,7 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         global tempoAtual, precisao
         if self.mirando:
             #print('mirar inicia')
-            self.alvo = pygame.image.load('PCS/assets/sprites/mira.png')
+            self.alvo = pygame.image.load('assets/sprites/mira.png')
             self.alvo = pygame.transform.scale(self.alvo, (600, 135))
             janela.tela.blit(self.alvo, (20, 205))
             self.x_mira += 5.6
@@ -130,10 +130,10 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         #print('Mas não estava amarelo')
         
 botoes = [
-    Selecoes(50, "Wilson Tremba"),
-    Selecoes(190, "Checar"),
+    Selecoes(50, "Wilson Tremba"), 
+    Selecoes(190, "Agir"),
     Selecoes(330, "Item"),
-    Selecoes(470, "Piedade"),
+    Selecoes(470, "Poupar"),
     ]
 
 print('inicializando seleções')
