@@ -27,7 +27,16 @@ def reiniciarJogo():
     cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
     pygame.mixer.music.set_volume(0.45)
     pygame.mixer.music.play(-1)
-    janela.mudarTela('seleções')
+    if not cos.zerouJogo:
+        cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
+        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.play(-1)
+        janela.mudarTela('seleções') 
+    else:
+        cos.musicaFundo = pygame.mixer.music.load("assets/sounds/[Tremba's Contract].mp3")
+        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.play(-1)
+        janela.mudarTela('Menu')
 #Quando a função é chamada, digita todos os textos dos itens na tela (de forma organizada). Além de criar a colisão nos itens inscritos na tela (junto com o gambiarra (definido no módulo de seleções))   
 def printaItens(botoes):
     iy = 0
