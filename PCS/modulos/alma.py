@@ -57,13 +57,22 @@ artes.add(alma)
 class Wilson(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.sprites = []
-        self.sprites.append(pygame.image.load('PCS/assets/sprites/Wilsoniddle.png'))
-        self.atual = 0
-        self.image = self.sprites[self.atual]
-        self.image = pygame.transform.scale(self.image, (200, 200))
+        self.wilsonsprites = []
+        for i in range(3):
+            img = cos.wilsonsheet.subsurface((i * 150, 0), (150,150))
+            img = pygame.transform.scale(img, (190, 190))
+            self.wilsonsprites.append(img)
+            
+        self.indexWilson = 0
+        self.image = self.wilsonsprites[self.indexWilson]
         self.rect = self.image.get_rect()
-        self.rect.center = 300, 87
+        self.rect.center = 300, 85
+        
+    def update(self):
+        self.indexWilson += 0.013
+        if self.indexWilson >= len(self.wilsonsprites):
+            self.indexWilson = 0
+        self.image = self.wilsonsprites[int(self.indexWilson)]
 
 wilson_sprite = Wilson()
 artes.add(wilson_sprite)
@@ -72,20 +81,20 @@ class AnimacaoAtaque(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.imagens_ataque = []
-        for i in range(6):
-            img = cos.sprite_sheet.subsurface((0, i * 12), (12,12))
-            img = pygame.transform.scale(img, (12 * 2, 12*5))
+        for i in range(4):
+            img = cos.sprite_sheet.subsurface((0, i * 88), (38,88))
+            img = pygame.transform.scale(img, (38 * 2, 88*2))
             self.imagens_ataque.append(img)
 
         self.indexLista = 0
         self.image = self.imagens_ataque[self.indexLista]
         self.rect = self.image.get_rect()
-        self.rect.center = (300, 220)
+        self.rect.center = (290,68)
         
     def update(self):
-        if self.indexLista > 5:
+        self.indexLista += 0.07
+        if self.indexLista >= len(self.imagens_ataque):
             self.indexLista = 0
-        self.indexLista += 0.25
         self.image = self.imagens_ataque[int(self.indexLista)]
     
     
