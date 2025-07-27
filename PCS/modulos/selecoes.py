@@ -23,6 +23,8 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
         self.comecaBatalha = False #isso indica se a batalha deve ou não começar
         self.impedeTravaPos = False #e esse aqui impede que o x e o y do jogador seja resetado. EU N AGUENTO MAIS (não pensei em um nome melhor)
         self.comecoMira = 0 #tive que criar isso aqui pq a mira tava selecionando automaticamente
+        self.animandoAtaque = False
+        self.framesAtaque = 0
         
     def desenhaSelecoes(self):
         pygame.draw.rect(janela.tela, self.cor, self.botao, width=2)
@@ -73,12 +75,30 @@ class Selecoes(): #to começando a achar que essa classe ta maior doq deveria ma
             tempoAtual = pygame.time.get_ticks()
             if self.x_mira >= 620 or (tecla == K_z and tempoAtual - self.comecoMira >= 100):
                 self.mirando = False
+                ataques_sprite.indexLista = 0
+                cos.tocouAtaque = False
+                self.animandoAtaque = True
+                self.framesAtaque = 0
                 ataque_player(self.x_mira)
                 self.x_mira = 40
                 '''self.comecaBatalha = True
                 self.impedeTravaPos = False'''
                 #print(self.comecaBatalha)
                 #print(self.impedeTravaPos)
+                
+    def animaAtaque(self):
+        from modulos.alma import ataques_sprite
+        if self.animandoAtaque:
+            ataques_sprite.update()
+            janela.tela.blit(ataques_sprite.image, ataques_sprite.rect)
+            self.framesAtaque += 1  
+        
+            if self.framesAtaque >= 0 and cos.tocouAtaque == False:
+                ataqueSom = pygame.mixer.Sound('PCS/assets/sounds/slash.mp3')
+                ataqueSom.play()
+                cos.tocouAtaque = True
+            elif self.framesAtaque >= 53:
+                self.animandoAtaque = False
         
     #Método que, quando chamado, muda o jogador para a tela de combate. O comecaBatalha (flag) serve para garantir que a função não seja chamada até que a flag seja verdadeira
     def batalhaAcontece(self):
