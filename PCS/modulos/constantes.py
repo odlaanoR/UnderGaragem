@@ -1,6 +1,5 @@
 import pygame
 
-
 pygame.init()
 
 #Definições Padrões
@@ -9,10 +8,6 @@ altura = 480
 velocidade = 3.2
 x = 286
 y = 270
-transicaoTempo = 0
-mostraTransicao = False
-transicaoFinal = False
-#transicaoGenocida = False
 fps = pygame.time.Clock()   
 vida = 92
 vidaAtual = 92
@@ -21,10 +16,20 @@ zerouJogo = False
 desapareceMensagem = False
 #telainicial = True
 
+#transições
+transicaoTempo = 0
+mostraTransicao = False
+transicaoFinal = False
+transicaoGradual = 0
+fazGradual = False
+gradualSurface = pygame.Surface((640,480))
+
 #Tela do Menu
 botaoIniciar = pygame.Rect(270, 250, 120, 40)
 botaoCreditos = pygame.Rect(270, 295, 120, 40)
 
+botaoSim = pygame.Rect(80, 290, 120, 40)
+botaoNao = pygame.Rect(430, 290, 120, 40)
 #Variaveis de ataques e etc
 ataque_iniciou = False
 fim_do_ataque = pygame.event.custom_type()
@@ -40,7 +45,7 @@ jogador_atk = 1
 wilson_def = 99#LEMBRA DE MUDAR ISSO PELO AMOR DE DEUS
 wilson_atk = 10
 wilson_vida_max = 14000
-wilson_vida_atual = 5
+wilson_vida_atual = 14000
 
 caixa_combate = pygame.Rect(70, 190, 500, 180)
 
@@ -60,7 +65,7 @@ encontrouRevolver = False
 
 #Contador de Ações
 usouConversar = 0
-usouVasculhar = 2
+usouVasculhar = 0
 acaoSelecionada = None
 usouAcao = False
 
@@ -76,10 +81,13 @@ gameoverImg = pygame.image.load('PCS/assets/sprites/gameover.png')
 gameoverImg = pygame.transform.scale(gameoverImg, (600, 300))
 icon = pygame.image.load('PCS/assets/sprites/alma.png')
 pygame.display.set_icon(icon)
-WilsonIddle = pygame.image.load('PCS/assets/sprites/Wilsoniddle.png')
+#WilsonIddle = pygame.image.load('PCS/assets/sprites/Wilson.png')
+wilsonsheet = pygame.image.load('PCS/assets/sprites/wilsonsheet.png')
 tituloMenu = pygame.image.load('PCS/assets/sprites/UNDERGARAGEM.png')
 tituloMenu = pygame.transform.scale(tituloMenu, (560, 500))
-sprite_sheet = pygame.image.load('PCS/assets/sprites/ataquesheet.png')
+sprite_sheet = pygame.image.load('PCS/assets/sprites/ataquesheet3.png')
+animandoWilson = True
+
 
 #Sons/Músicas
 musicaFundo = pygame.mixer.music.load("PCS/assets/sounds/[Tremba's Contract].mp3")
@@ -89,8 +97,12 @@ dano_snd = pygame.mixer.Sound('PCS/assets/sounds/dano.mp3')
 parry_snd = pygame.mixer.Sound('PCS/assets/sounds/parry.mp3')
 clica_som = pygame.mixer.Sound('PCS/assets/sounds/snd_select.mp3')
 cura_som = pygame.mixer.Sound('PCS/assets/sounds/snd_heal.wav')
+transicaoSom = pygame.mixer.Sound('PCS/assets/sounds/transicao.ogg')
+tocouTransicao = False
 tocouMenu = False
 tocouFimPacifista = False
+tocouGenocida = False
+tocouAtaque = False
 
 #textos
 dialogos = (
