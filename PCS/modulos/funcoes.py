@@ -40,8 +40,10 @@ def reiniciarJogo():
     cos.encontrouMc = False
     cos.encontrouRevolver = False
     cos.desapareceMensagem = False
+    cos.tocouTransicao = False
     cos.jogador_def = 0
     cos.jogador_atk = 1
+    cos.animandoWilson = True
     
     if not cos.zerouJogo:
         cos.musicaFundo = pygame.mixer.music.load('PCS/assets/sounds/Project147.mp3')
@@ -174,7 +176,7 @@ def ataque_player(mira):
 def mostrarDano():
     if cos.dano_mensagem:
         tempo_atual = pygame.time.get_ticks()
-        if tempo_atual - cos.dano_tempo < 1500:  # mostra por 1.5 segundos
+        if tempo_atual - cos.dano_tempo < 1500:  # mostra por 2.5 segundos
             janela.escreveTexto(cos.dano_mensagem, cos.fonteDano, cos.dano_cor, (janela.tela.get_width()/2, janela.tela.get_height()/2 - 150))
         else:
             # Limpa a mensagem após o tempo
