@@ -9,7 +9,7 @@ class Janelas():
         self.largura = largura
         self.altura = altura
         self.tela = pygame.display.set_mode((largura,altura))
-        self.telaAtual = 'seleções'
+        self.telaAtual = 'Menu'
         
     def mudarTela(self,novaTela):
         self.telaAtual = novaTela
