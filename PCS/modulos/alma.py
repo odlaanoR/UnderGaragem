@@ -8,11 +8,11 @@ class Alma(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = [
-        pygame.image.load('PCS/assets/sprites/alma.png'),
-        pygame.image.load('PCS/assets/sprites/almaazul.png'),
-        pygame.image.load('PCS/assets/sprites/almaverde.png'),    
+        pygame.image.load('assets/sprites/alma.png'),
+        pygame.image.load('assets/sprites/almaazul.png'),
+        pygame.image.load('assets/sprites/almaverde.png'),    
         ]
-        self.game_over = pygame.image.load('PCS/assets/sprites/almaquebrada.png')
+        self.game_over = pygame.image.load('assets/sprites/almaquebrada.png')
         self.estado = 0
         self.image = self.sprites[self.estado]
         self.image = pygame.transform.scale(self.image, (16, 16))
@@ -26,7 +26,7 @@ class Alma(pygame.sprite.Sprite):
     def update(self):
         self.rect.center = cos.x, cos.y
         if self.acertavel == False:
-            self.image = pygame.image.load('PCS/assets/sprites/almavazia.png')
+            self.image = pygame.image.load('assets/sprites/almavazia.png')
         else:
             self.image = self.sprites[self.estado]
         self.image = pygame.transform.scale(self.image, (16, 16))
