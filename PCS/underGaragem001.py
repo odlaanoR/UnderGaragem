@@ -477,6 +477,9 @@ while True:
                     act.acoes.append(act.Acao('O revolver que matou "Felipe"', ''))
                     cos.encontrouRevolver = True
                     cos.jogador_atk += 998      
+            else:
+                textoEfeito = 'Você encontrou um rato, ele faz barulho'
+                texto2 = 'Você prefere deixa-lo ir'
         elif acao.nome == 'Checar':
             if cos.usouConversar < 3:
                 textoEfeito = acao.efeito
