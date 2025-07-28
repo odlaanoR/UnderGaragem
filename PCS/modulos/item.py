@@ -63,7 +63,7 @@ class Item():
     def checaAlma(self):
         if alma.rect.colliderect(self.colisao):
             if self.passou:
-                passaAcao = pygame.mixer.Sound('PCS/assets/sounds/snd_squeak.mp3')
+                passaAcao = pygame.mixer.Sound('assets/sounds/snd_squeak.mp3')
                 passaAcao.set_volume(0.3)
                 passaAcao.play()
                 self.passou = False
