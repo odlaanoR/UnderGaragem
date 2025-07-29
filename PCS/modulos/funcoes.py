@@ -44,6 +44,7 @@ def reiniciarJogo():
     cos.jogador_def = 0
     cos.jogador_atk = 1
     cos.animandoWilson = True
+    cos.equipou_revolver = False
     
     if not cos.zerouJogo:
         cos.musicaFundo = pygame.mixer.music.load('assets/sounds/Project147.mp3')
