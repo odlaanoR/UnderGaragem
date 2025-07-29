@@ -71,8 +71,8 @@ usouAcao = False
 
 #Fontes
 fonte = pygame.font.SysFont('arial', 30, True, False)
-fonteCustomizada = pygame.font.Font('PCS/assets/fonte2.ttf', 23)
-fonteDano = pygame.font.Font('PCS/assets/hachicro.TTF', 35)
+fonteCustomizada = pygame.font.Font('assets/fonte2.ttf', 23)
+fonteDano = pygame.font.Font('assets/hachicro.TTF', 35)
 fonteBatalha = pygame.font.SysFont('comicsans', 20, True, False)
 pygame.display.set_caption('Undergaragem')
 
