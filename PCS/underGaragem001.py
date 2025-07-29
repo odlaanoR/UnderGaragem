@@ -174,9 +174,9 @@ while True:
                 botao.comecaBatalha = False
                 cos.desapareceMensagem = False
                 
-                if cos.fase_atual + 1 >= len(atk.fases):
-                    func.reseta_rodada(fase)
+                if cos.fase_atual + 1 >= len(atk.fases) or cos.ataques_acabaram:
                     cos.fase_atual = randint(0, 12)
+                    func.reseta_rodada(atk.fases[cos.fase_atual])
                     cos.ataques_acabaram = True
                 else:
                     cos.fase_atual += 1  
