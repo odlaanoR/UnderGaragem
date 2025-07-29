@@ -81,7 +81,7 @@ gameoverImg = pygame.image.load('assets/sprites/gameover.png')
 gameoverImg = pygame.transform.scale(gameoverImg, (600, 300))
 icon = pygame.image.load('assets/sprites/alma.png')
 pygame.display.set_icon(icon)
-#WilsonIddle = pygame.image.load('PCS/assets/sprites/Wilson.png')
+#WilsonIddle = pygame.image.load('assets/sprites/Wilson.png')
 wilsonsheet = pygame.image.load('assets/sprites/wilsonsheet.png')
 tituloMenu = pygame.image.load('assets/sprites/UNDERGARAGEM.png')
 tituloMenu = pygame.transform.scale(tituloMenu, (560, 500))
@@ -104,13 +104,17 @@ tocouFimPacifista = False
 tocouGenocida = False
 tocouAtaque = False
 
+
+
+equipou_revolver = False
+
 #textos
 dialogos = (
     "*Aqui acabou",
     "*Quem é esse cara?",
     ("*Você olha ao redor, diversas caixas e coisas estão próximas", "Use VASCULHAR para procurar por algo útil"),
     ("*Sr. Tremba mexeu no seu relógio", "o tempo parece se alterar levemente"),
-    "C o n t i n u e  a t a c a n d o",
+    "*Tem cheiro de trevas e laranja",
     "*O ar estrala de puro terror",
     "*Caminhões tombam ao seu redor",
     "*Você escuta uma notificação de email ao longe",
