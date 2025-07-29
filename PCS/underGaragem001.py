@@ -178,6 +178,7 @@ while True:
                     cos.fase_atual = randint(0, 12)
                     func.reseta_rodada(atk.fases[cos.fase_atual])
                     cos.ataques_acabaram = True
+                    print(f'resetando ataques da rodada')
                 else:
                     cos.fase_atual += 1  
                 if cos.dialogo_atual + 1 >= len(cos.dialogos):
@@ -476,10 +477,11 @@ while True:
                 if not cos.encontrouRevolver:
                     act.acoes.append(act.Acao('O revolver que matou "Felipe"', ''))
                     cos.encontrouRevolver = True
-                    cos.jogador_atk += 998      
+
             else:
-                textoEfeito = 'Você encontrou um rato, ele faz barulho'
-                texto2 = 'Você prefere deixa-lo ir'
+                textoEfeito = "Você achou um rato, ele faz barulho"   
+                texto2 = 'você prefere deixar ele ir'
+            
         elif acao.nome == 'Checar':
             if cos.usouConversar < 3:
                 textoEfeito = acao.efeito
@@ -493,6 +495,9 @@ while True:
         elif acao.nome == 'O revolver que matou "Felipe"':
             textoEfeito = 'Você equipou essa coisa, você escuta gritos ao seu redor'
             texto2 = 'Você sente que isso pode machucar alguém'
+            if not cos.equipou_revolver:
+                cos.jogador_atk += 998   
+                cos.equipou_revolver = True
             
         janela.escreveTexto(textoEfeito, cos.fonteBatalha, (255,255,255), (50,220))  
         janela.escreveTexto(texto2, cos.fonteBatalha, (255,255,255), (50,250))
